@@ -54,18 +54,19 @@ function chaptersFor(entry: LibraryBook): Chapter[] {
   const stride = Math.floor(body / count);
   let cursor = 19 + (hash(entry.id) % 8);
   return entry.subtopics.map((subtopic, index) => {
-    // Chapters are deliberately uneven: +/- 30% around the average length.
-    const wobble = ((hash(`${entry.id}:${subtopic}`) % 61) - 30) / 100;
-    const span = Math.min(46, Math.max(9, Math.round(stride * (1 + wobble))));
+    // Chapters are deliberately uneven: +/- 35% around the average length,
+    // scaling with the book's own page count so estimates genuinely differ.
+    const wobble = ((hash(`${entry.id}:${subtopic}`) % 71) - 35) / 100;
+    const span = Math.max(8, Math.round(stride * (1 + wobble)));
     const start = cursor;
-    const end = start + span - 1;
+    const end = Math.min(entry.pageCount, start + span - 1);
     cursor = end + 1;
     return {
       number: index + 2,
       title: subtopic,
       pages: `${start}–${end}`,
-      // Friendly estimates: snapped to the nearest nice multiple of 5.
-      minutes: niceMinutes(Math.max(14, span * 1.6)),
+      // ~1.6 minutes per page, snapped to the nearest nice multiple of 5.
+      minutes: niceMinutes(Math.max(14, (end - start + 1) * 1.6)),
       preview: `${entry.description} This chapter focuses on ${subtopic.toLowerCase()}.`,
     };
   });
