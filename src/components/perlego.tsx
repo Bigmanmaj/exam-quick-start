@@ -108,7 +108,7 @@ function Cover({ book, small = false }: { book: Book; small?: boolean }) {
 }
 
 export function ResultsPage() {
-  const { query, setQuery, topics, setTopics, selectBook, toggleBook, plan, isReading, toggleReading } = useOnboarding();
+  const { query, setQuery, topics, setTopics, selectBook, toggleBook, addBook, addReading, plan, isReading, toggleReading } = useOnboarding();
   const books = matchingBooks(query, topics);
   const [value, setValue] = useState(query);
   const [loading, setLoading] = useState(true);
