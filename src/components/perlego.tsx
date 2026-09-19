@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, Bookmark, Check, CheckCircle2, ChevronDown, Cloc
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { examples, resultsFor, matchingBooks, type Book } from "@/lib/mock-data";
+import { examples, resultsFor, matchingBooks, matchedChapters, type Book } from "@/lib/mock-data";
 import { useOnboarding } from "@/lib/onboarding-context";
 
 export function Logo() {
