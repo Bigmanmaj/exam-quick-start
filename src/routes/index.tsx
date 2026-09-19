@@ -3,10 +3,10 @@ import { SearchHome } from "@/components/perlego";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "Find exactly what to revise — Perlego" },
-    { name: "description", content: "Find the most relevant chapters for your exam and start studying with confidence." },
-    { property: "og:title", content: "Find exactly what to revise — Perlego" },
-    { property: "og:description", content: "Find the most relevant chapters for your exam and start studying with confidence." },
+    { title: "Find the right chapters in minutes — Perlego Exam Sprint" },
+    { name: "description", content: "Enter your module, see the chapters that match your revision topics and start reading before you sign up." },
+    { property: "og:title", content: "Find the right chapters in minutes — Perlego Exam Sprint" },
+    { property: "og:description", content: "Enter your module, see the chapters that match your revision topics and start reading before you sign up." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ]}),
