@@ -23,7 +23,7 @@ const testimonials = [
   { tag: "Confidence", quote: "My biggest worry was spending my revision time on the wrong material. Seeing that the results covered most of my revision topics up front settled that straight away. I stopped second-guessing and just started reading.", name: "Daniel O.", detail: "3rd year Psychology" },
   { tag: "No setup friction", quote: "I was not in the mood to fill in forms the night before an exam. I got to a real chapter first, and only signed up when I wanted to save my list of topics. That felt fair.", name: "Aisha K.", detail: "1st year Law" },
   { tag: "Focus under time pressure", quote: "With my exam approaching I couldn't read whole textbooks. Being pointed to the chapters that matched my module let me focus on what was actually likely to come up.", name: "Tom W.", detail: "2nd year Business Management" },
-  { tag: "Calm going in", quote: "I walked in feeling prepared rather than panicked. I knew what I had covered and what I hadn't, and that made the last day of revision far less stressful.", name: "Elena M.", detail: "3rd year Biology" },
+  { tag: "Calm going in", quote: "I walked in feeling prepared rather than panicked. I knew what I had covered and what I hadn't, and that made the final stretch of revision far less stressful.", name: "Elena M.", detail: "3rd year Biology" },
   { tag: "Fast", quote: "Found my module's key chapters in minutes, not hours.", name: "Jamal R.", detail: "2nd year Computer Science" },
 ] as const;
 
