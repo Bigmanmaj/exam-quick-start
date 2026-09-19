@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Bookmark, Check, CheckCircle2, ChevronDown, Clock3, Highlighter, Minus, Plus, Quote, Search, Sparkles, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Check, CheckCircle2, ChevronDown, Clock3, Highlighter, ListChecks, Minus, Plus, Quote, Search, Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -140,7 +140,7 @@ export function ResultsPage() {
       <Button type="submit" className="hidden shrink-0 sm:inline-flex">Search again <ArrowRight size={18} /></Button>
       <Button type="submit" size="icon" aria-label="Search again" className="shrink-0 sm:hidden"><ArrowRight size={18} /></Button>
     </form>
-    {loading ? <LoadingResults /> : <><div className="mt-7 flex items-start gap-3 border-y border-border py-5 text-base"><Sparkles className="mt-0.5 shrink-0 text-primary" size={20}/><p>3 sample books, matched to {topics.length} selected topics. {books[0]?.match ? "Start with #1 for the closest match." : "No matching chapters yet — try adjusting your topics."} <Link to="/topics" search={{edit:true}} className="underline">Edit topics</Link></p></div>
+    {loading ? <LoadingResults /> : <><div className="mt-7 flex items-start gap-3 border-y border-border py-5 text-base"><Sparkles className="mt-0.5 shrink-0 text-primary" size={20}/><p>3 sample books, matched to {topics.length} selected topics. {books[0]?.match ? "Start with #1 for the closest match." : "No matching chapters yet — try adjusting your topics."} <Link to="/topics" search={{edit:true}} className="underline">Edit topics</Link></p><Link to="/study" className="ml-auto flex shrink-0 items-center gap-1.5 font-semibold text-primary underline-offset-4 hover:underline"><ListChecks size={18} /> Go to revision plan</Link></div>
     <div className="mt-7 grid gap-5">{books.map((book, index) => <article key={book.id} className="result-card grid gap-6 rounded-lg border border-border bg-background p-5 transition hover:-translate-y-0.5 hover:shadow-warm-lg sm:grid-cols-[128px_1fr_auto] sm:p-6">
       <button type="button" onClick={() => choose(book)} aria-label={`Open ${book.title} at chapter one`} className="cursor-pointer text-left transition hover:opacity-80"><Cover book={book}/></button><div className="min-w-0 cursor-pointer" onClick={() => choose(book)}><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-primary-soft px-2.5 py-1 text-xs font-bold text-primary">{book.match}% match</span>{index === 0 && <span className="rounded-full bg-success-soft px-2.5 py-1 text-xs font-bold text-success">Best place to start</span>}</div><h2 className="mt-3 font-ui text-xl font-bold">{book.title}</h2><p className="mt-1 text-sm text-muted-foreground">{book.author} · {book.edition}</p>
       <div className="mt-5 grid gap-2">{book.chapters.map((chapter) => <div key={chapter.number} className="flex flex-wrap items-center justify-between gap-2 text-sm">
