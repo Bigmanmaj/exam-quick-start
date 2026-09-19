@@ -19,8 +19,8 @@ export function Header({ back }: { back?: "/" | "/results" | "/study" | "/topics
 }
 
 const testimonials = [
-  { tag: "Speed to relevance", quote: "I had a Macroeconomics exam in two days and no idea which chapters mattered. I typed in the module name, and within a couple of minutes I was reading the exact topics on my syllabus. I didn't even have an account at that point.", name: "Priya S.", detail: "2nd year Economics" },
-  { tag: "Confidence", quote: "My biggest worry was wasting my last 48 hours on the wrong material. Seeing that the results covered most of my revision topics up front settled that straight away. I stopped second-guessing and just started reading.", name: "Daniel O.", detail: "3rd year Psychology" },
+  { tag: "Speed to relevance", quote: "I had a Macroeconomics exam coming up and no idea which chapters mattered. I typed in the module name, and within a couple of minutes I was reading the exact topics on my syllabus. I didn't even have an account at that point.", name: "Priya S.", detail: "2nd year Economics" },
+  { tag: "Confidence", quote: "My biggest worry was spending my revision time on the wrong material. Seeing that the results covered most of my revision topics up front settled that straight away. I stopped second-guessing and just started reading.", name: "Daniel O.", detail: "3rd year Psychology" },
   { tag: "No setup friction", quote: "I was not in the mood to fill in forms the night before an exam. I got to a real chapter first, and only signed up when I wanted to save my list of topics. That felt fair.", name: "Aisha K.", detail: "1st year Law" },
   { tag: "Focus under time pressure", quote: "With two days left I couldn't read whole textbooks. Being pointed to the chapters that matched my module let me focus on what was actually likely to come up.", name: "Tom W.", detail: "2nd year Business Management" },
   { tag: "Calm going in", quote: "I walked in feeling prepared rather than panicked. I knew what I had covered and what I hadn't, and that made the last day of revision far less stressful.", name: "Elena M.", detail: "3rd year Biology" },
@@ -75,7 +75,7 @@ export function SearchHome() {
     <LandingHeader />
     <section id="hero" className="mx-auto flex min-h-[78vh] max-w-5xl scroll-mt-20 flex-col items-center px-8 pt-[8vh] text-center">
       <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary-soft px-3 py-1.5 text-sm font-semibold text-primary"><Sparkles size={15} /> Perlego Exam Sprint · Demo</div>
-      <h1 className="max-w-4xl font-display text-7xl leading-[1.03]">Exam in two days? Find the right chapters in minutes.</h1>
+      <h1 className="max-w-4xl font-display text-7xl leading-[1.03]">Exam coming up? Find the right chapters in minutes.</h1>
       <p className="mt-5 max-w-2xl text-lg leading-8 text-muted-foreground">Tell us your module. See the material that matches your topics before you sign up.</p>
       <form onSubmit={submit} className="mt-9 flex w-full max-w-3xl items-center gap-2 rounded-lg border border-input bg-background p-2 shadow-warm focus-within:ring-4 focus-within:ring-ring">
         <Search className="ml-3 shrink-0 text-muted-foreground" size={22} />
