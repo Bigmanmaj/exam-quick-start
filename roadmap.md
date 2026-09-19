@@ -1,9 +1,10 @@
 # Roadmap
 
 - [x] Extend local data and persisted onboarding state
-- [x] Add exam setup and topic selection
 - [x] Connect matching, plan membership and preview
 - [x] Connect simulated subscription and adaptive plan to reader
+- [x] Chapter labels link to that chapter; book card opens chapter one
+- [x] Remove topic step from search flow (all topics auto-ticked, search goes straight to matches); /topics kept as edit-only page via "Edit topics"
 - [x] Verify full journey, reloads, keyboard and mobile
 
-Verified: desktop activation flow, mobile layout, keyboard setup and topic selection, same-day and flexible exams, saved notes, plan membership, session progress after reload, and direct-route fallback. No browser errors in the complete walkthrough.
+Flow: Landing → Results (matches) → Preview → Signup → Study Plan → Reader. Topic editing lives at /topics?edit=true only.
