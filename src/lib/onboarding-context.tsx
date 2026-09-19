@@ -59,7 +59,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
   const updateQuery = (value: string) => {
     setQuery(value);
-    const next = resultsFor(value).books[0];
+    const next = resultsFor(value).books[0] ?? initial.initialBook;
     const chapter = next?.chapters[0];
     if (next && chapter) {
       setSelectedBook(next);
