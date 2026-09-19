@@ -1,8 +1,7 @@
 # Roadmap
 
-- [x] Build landing search and local onboarding state
-- [x] Build three mock result sets and result cards
-- [x] Build one-paragraph reader preview with functional tools and paywall
-- [x] Build single-screen signup with card, Google Pay, and Apple Pay mocks
-- [x] Build adaptive study dashboard
-- [x] Verify desktop, mobile, keyboard flow, metadata, and console
+- [ ] Extend local data and persisted onboarding state
+- [ ] Add exam setup and topic selection
+- [ ] Connect matching, plan membership and preview
+- [ ] Connect simulated subscription and adaptive plan to reader
+- [ ] Verify full journey, reloads, keyboard and mobile
