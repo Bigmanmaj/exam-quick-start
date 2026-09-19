@@ -7,7 +7,7 @@ import { useOnboarding } from '@/lib/onboarding-context';
 import { resultsFor } from '@/lib/mock-data';
 
 export function JourneyFrame({children}:{children:ReactNode}) {return <main className="min-h-screen bg-paper"><Header back="/"/><section className="mx-auto max-w-2xl px-5 pb-20 pt-10 sm:pt-16">{children}</section></main>}
-export function TopicsPage({edit}:{edit?:boolean}){
+export function TopicsPage({edit}:{edit?:boolean|undefined}){
  const s=useOnboarding();const navigate=useNavigate();const [custom,setCustom]=useState('');
  const suggestions=resultsFor(s.query).books[0]?.topics.map(t=>t.label)??[];
  const all=Array.from(new Set([...suggestions,...s.topics]));
