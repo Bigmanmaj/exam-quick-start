@@ -10,18 +10,37 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PreviewRouteImport } from './routes/preview'
+import { Route as ReaderRouteImport } from './routes/reader'
 import { Route as ResultsRouteImport } from './routes/results'
+import { Route as SetupRouteImport } from './routes/setup'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as StudyRouteImport } from './routes/study'
+import { Route as TopicsRouteImport } from './routes/topics'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PreviewRoute = PreviewRouteImport.update({
+  id: '/preview',
+  path: '/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReaderRoute = ReaderRouteImport.update({
+  id: '/reader',
+  path: '/reader',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResultsRoute = ResultsRouteImport.update({
   id: '/results',
   path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupRoute = SetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -34,39 +53,85 @@ const StudyRoute = StudyRouteImport.update({
   path: '/study',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TopicsRoute = TopicsRouteImport.update({
+  id: '/topics',
+  path: '/topics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/preview': typeof PreviewRoute
+  '/reader': typeof ReaderRoute
   '/results': typeof ResultsRoute
+  '/setup': typeof SetupRoute
   '/signup': typeof SignupRoute
   '/study': typeof StudyRoute
+  '/topics': typeof TopicsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/preview': typeof PreviewRoute
+  '/reader': typeof ReaderRoute
   '/results': typeof ResultsRoute
+  '/setup': typeof SetupRoute
   '/signup': typeof SignupRoute
   '/study': typeof StudyRoute
+  '/topics': typeof TopicsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/preview': typeof PreviewRoute
+  '/reader': typeof ReaderRoute
   '/results': typeof ResultsRoute
+  '/setup': typeof SetupRoute
   '/signup': typeof SignupRoute
   '/study': typeof StudyRoute
+  '/topics': typeof TopicsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/results' | '/signup' | '/study'
+  fullPaths:
+    | '/'
+    | '/preview'
+    | '/reader'
+    | '/results'
+    | '/setup'
+    | '/signup'
+    | '/study'
+    | '/topics'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/results' | '/signup' | '/study'
-  id: '__root__' | '/' | '/results' | '/signup' | '/study'
+  to:
+    | '/'
+    | '/preview'
+    | '/reader'
+    | '/results'
+    | '/setup'
+    | '/signup'
+    | '/study'
+    | '/topics'
+  id:
+    | '__root__'
+    | '/'
+    | '/preview'
+    | '/reader'
+    | '/results'
+    | '/setup'
+    | '/signup'
+    | '/study'
+    | '/topics'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PreviewRoute: typeof PreviewRoute
+  ReaderRoute: typeof ReaderRoute
   ResultsRoute: typeof ResultsRoute
+  SetupRoute: typeof SetupRoute
   SignupRoute: typeof SignupRoute
   StudyRoute: typeof StudyRoute
+  TopicsRoute: typeof TopicsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,11 +143,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/preview': {
+      id: '/preview'
+      path: '/preview'
+      fullPath: '/preview'
+      preLoaderRoute: typeof PreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reader': {
+      id: '/reader'
+      path: '/reader'
+      fullPath: '/reader'
+      preLoaderRoute: typeof ReaderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/results': {
       id: '/results'
       path: '/results'
       fullPath: '/results'
       preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -99,14 +185,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/topics': {
+      id: '/topics'
+      path: '/topics'
+      fullPath: '/topics'
+      preLoaderRoute: typeof TopicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PreviewRoute: PreviewRoute,
+  ReaderRoute: ReaderRoute,
   ResultsRoute: ResultsRoute,
+  SetupRoute: SetupRoute,
   SignupRoute: SignupRoute,
   StudyRoute: StudyRoute,
+  TopicsRoute: TopicsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
