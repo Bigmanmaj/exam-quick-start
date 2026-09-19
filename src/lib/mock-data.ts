@@ -146,17 +146,31 @@ export function matchedChapters(book: Book, topics: string[]) {
 
 export function matchingBooks(query: string, topics: string[]) {
   const active = topics.length ? topics : resultsFor(query).books[0]?.topics.map((t) => t.label) ?? [];
-  return resultsFor(query)
+  const terms = words(query);
+  const scored = resultsFor(query)
     .books.map((book) => {
-      const covered = book.topics.filter((t) => active.includes(t.label) && t.covered).map((t) => t.label);
+      const own = book.topics.filter((t) => t.covered).map((t) => t.label);
+      const covered = own.filter((label) => active.includes(label));
+      // Scored against the book's own topics, not the pooled topic list, so a
+      // short focused book is not punished for the breadth of the search.
+      const depth = covered.length / Math.max(1, Math.min(own.length || active.length, active.length));
+      const breadth = covered.length / Math.max(1, active.length);
+      const text = Math.min(1, score(book, terms) / 18);
+      const blend = depth * 0.5 + breadth * 0.25 + text * 0.25;
+      // Nudged by a stable per-book offset so matches read as distinct scores.
+      const jitter = (hash(`${book.id}:${active.length}`) % 9) - 4;
+      const match = covered.length === 0 && text === 0 ? 0 : Math.min(98, Math.max(52, Math.round(blend * 100) + jitter));
       return {
         ...book,
         chapters: matchedChapters(book, active),
         topics: active.map((label) => ({ label, covered: covered.includes(label) })),
-        match: Math.round((covered.length / Math.max(1, active.length)) * 100),
+        match,
       };
     })
     .sort((a, b) => b.match - a.match);
+  // Only surface confident matches; keep at least three results.
+  const confident = scored.filter((book) => book.match >= 60);
+  return confident.length >= 3 ? confident : scored.filter((book) => book.match > 0).slice(0, 3);
 }
 
 /** Sample study text. Composed from the published description — not the real book text. */
