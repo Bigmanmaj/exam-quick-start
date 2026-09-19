@@ -2,10 +2,8 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { Book } from '@/lib/mock-data';
 
-const unavailableCoverIds = new Set([
-  'RB001', 'RB002', 'RB003', 'RB007', 'RB009', 'RB010', 'RB011', 'RB012', 'RB013',
-  'RB014', 'RB015', 'RB017', 'RB018', 'RB022', 'RB024', 'RB025', 'RB026', 'RB029',
-]);
+/** Ids whose remote artwork is known to be missing — these render the standard cover. */
+const unavailableCoverIds = new Set<string>([]);
 
 function StandardCover({ book, className }: { book: Book; className: string }) {
   return <div className={cn('relative flex shrink-0 flex-col overflow-hidden rounded-sm border border-border bg-muted p-3 text-left shadow-warm', className)}>
