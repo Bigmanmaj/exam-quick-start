@@ -42,13 +42,21 @@ export function DashboardPage() {
         <input id="dashboard-search" value={value} onChange={(e) => setValue(e.target.value)} placeholder="Search a module, topic or textbook" className="min-w-0 flex-1 bg-transparent px-1 py-1.5 outline-none" />
         <Button type="submit" size="sm">Search</Button>
       </form>
-      <div className="flex items-center gap-2"><span className="grid size-10 place-items-center rounded-full bg-primary font-ui text-sm font-extrabold text-primary-foreground" aria-hidden="true">{(s.name.trim() || 'Student').split(' ').map((p) => p[0]).slice(0, 2).join('')}</span><Button variant="ghost" onClick={signOut}>Log out <LogOut size={16} /></Button></div>
+      {guest
+        ? <div className="flex items-center gap-2"><Button variant="ghost" onClick={() => navigate({ to: '/login' })}>Log in</Button><Button onClick={() => navigate({ to: '/signup' })}>Sign up</Button></div>
+        : <div className="flex items-center gap-2"><span className="grid size-10 place-items-center rounded-full bg-primary font-ui text-sm font-extrabold text-primary-foreground" aria-hidden="true">{(s.name.trim() || 'Student').split(' ').map((p) => p[0]).slice(0, 2).join('')}</span><Button variant="ghost" onClick={signOut}>Log out <LogOut size={16} /></Button></div>}
     </div></header>
 
     <section className="mx-auto max-w-7xl px-5 pb-20 pt-9 sm:px-8">
-      <p className="text-sm font-semibold text-primary">Welcome to Perlego</p>
-      <h1 className="mt-2 font-display text-4xl sm:text-5xl">Good to see you, {firstName}.</h1>
-      <p className="mt-3 max-w-2xl text-muted-foreground">Your student plan is active. Here's everything matched to “{s.query || 'your last search'}”.</p>
+      <p className="text-sm font-semibold text-primary">{guest ? 'Sample revision plan' : 'Welcome to Perlego'}</p>
+      <h1 className="mt-2 font-display text-4xl sm:text-5xl">{guest ? 'Here’s your revision plan.' : `Good to see you, ${firstName}.`}</h1>
+      <p className="mt-3 max-w-2xl text-muted-foreground">{guest ? `A sample plan built from “${s.query || 'your last search'}”. Preview the first page of any chapter, then sign up to keep it.` : `Your student plan is active. Here's everything matched to “${s.query || 'your last search'}”.`}</p>
+
+      {guest && <section className="mt-7 flex flex-wrap items-center justify-between gap-5 rounded-lg border border-primary/30 bg-primary-soft p-6">
+        <div><h2 className="font-ui text-xl font-bold">Sign up to save your revision plan</h2>
+          <p className="mt-2 max-w-xl text-sm text-muted-foreground">Your {readingList.length || 'saved'} {readingList.length === 1 ? 'chapter' : 'chapters'} and progress stay on this device only. Create a free demo account to keep them and unlock full chapters.</p></div>
+        <div className="flex flex-wrap gap-2"><Button onClick={() => navigate({ to: '/signup' })}>Sign up to save plan <ArrowRight size={17} /></Button><Button variant="outline" onClick={() => navigate({ to: '/login' })}>I already have an account</Button></div>
+      </section>}
 
       <section className="mt-8 rounded-lg border border-border bg-background p-6 shadow-warm-lg sm:p-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
