@@ -179,6 +179,10 @@ export function chapterParagraphs(book: Book, chapter: Chapter) {
   const topic = chapter.title.toLowerCase();
   return [
     `${book.description} This chapter of ${book.title} concentrates on ${topic}, setting out the core ideas you are most likely to be examined on.`,
-    `Use this chapter to build a definition of ${topic} in your own words, then attach one concrete example from ${book.author}'s argument to it. Examiners reward a clear mechanism and a worked example far more than a list of terms. (Sample study text for this prototype — the full chapter text sits behind Perlego's subscription.${entry ? ` Published ${entry.year}, ${entry.pageCount} pages.` : ''})`,
+    `${book.author} opens by defining ${topic} carefully, separating it from neighbouring concepts that students frequently conflate. The distinction matters: exam questions in this area are usually designed to test whether you can tell the two apart under pressure.`,
+    `The chapter then walks through the central mechanism step by step. Each stage is illustrated with a worked example, and ${book.author} is careful to show where the standard account breaks down — the edge cases are where most marks are won or lost.`,
+    `Use this chapter to build a definition of ${topic} in your own words, then attach one concrete example from ${book.author}'s argument to it. Examiners reward a clear mechanism and a worked example far more than a list of terms.`,
+    `A short summary closes the chapter, restating the three claims you should be able to defend: what ${topic} is, why it works the way it does, and where its limits lie. If you can explain all three without notes, you are ready for the exam.`,
+    `(Sample study text for this prototype — the full chapter text sits behind Perlego's subscription.${entry ? ` Published ${entry.year}, ${entry.pageCount} pages.` : ''})`,
   ];
 }
