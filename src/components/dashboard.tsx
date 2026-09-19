@@ -11,10 +11,7 @@ const providerLabel = { email: 'Email', unidays: 'UniDays', google: 'Google', ap
 const paymentLabel = { card: 'Card (mock)', google: 'Google Pay (mock)', apple: 'Apple Pay (mock)' } as const;
 
 function Spine({ book, className = '' }: { book: Book; className?: string }) {
-  return <div className={cn('book-cover relative shrink-0 overflow-hidden rounded-sm p-3 text-left shadow-warm', `cover-${book.cover}`, 'h-32 w-[86px]', className)} aria-hidden="true">
-    <div className="absolute inset-y-0 left-3 w-px bg-foreground/15" />
-    <p className="relative ml-2 font-display text-sm leading-tight text-foreground">{book.title}</p>
-  </div>;
+  return <BookCover book={book} small className={className} />;
 }
 
 export function DashboardPage() {
