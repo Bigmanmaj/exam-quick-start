@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "rea
 import { Button } from "@/components/ui/button";
 import { BookCover } from "@/components/book-cover";
 import { cn } from "@/lib/utils";
-import { examples, resultsFor, matchingBooks, matchedChapters, type Book } from "@/lib/mock-data";
+import { examples, resultsFor, matchingBooks, matchedChapters, bookMinutes, type Book } from "@/lib/mock-data";
 import { useOnboarding } from "@/lib/onboarding-context";
 
 export function Logo() {

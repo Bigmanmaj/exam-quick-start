@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { BookCover } from '@/components/book-cover';
 import { Logo } from './perlego';
 import { useOnboarding } from '@/lib/onboarding-context';
-import { chapterTopics, findChapterByKey, matchedChapters, matchingBooks, resultSets, resultsFor, type Book } from '@/lib/mock-data';
+import { chapterTopics, findChapterByKey, matchedChapters, matchingBooks, resultSets, resultsFor, bookMinutes, type Book } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
 
 const providerLabel = { email: 'Email', unidays: 'UniDays', google: 'Google', apple: 'Apple' } as const;
