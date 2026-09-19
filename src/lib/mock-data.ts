@@ -40,7 +40,7 @@ function chaptersFor(entry: LibraryBook): Chapter[] {
   return entry.subtopics.map((subtopic, index) => {
     // Chapters are deliberately uneven: +/- 30% around the average length.
     const wobble = ((hash(`${entry.id}:${subtopic}`) % 61) - 30) / 100;
-    const span = Math.max(9, Math.round(stride * (1 + wobble)));
+    const span = Math.min(46, Math.max(9, Math.round(stride * (1 + wobble))));
     const start = cursor;
     const end = start + span - 1;
     cursor = end + 1;
