@@ -10,7 +10,7 @@ export function Logo() {
   return <Link to="/" className="font-ui text-xl font-extrabold text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring">Perlego<span className="text-primary">.</span></Link>;
 }
 
-export function Header({ back }: { back?: string }) {
+export function Header({ back }: { back?: "/" | "/results" }) {
   return <header className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-5 sm:px-8">
     <div className="flex items-center gap-5">{back ? <Link to={back} aria-label="Go back" className="grid size-10 place-items-center rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring"><ArrowLeft size={20} /></Link> : null}<Logo /></div>
     <button className="text-sm font-semibold text-foreground underline decoration-border underline-offset-4 hover:text-primary">Log in</button>
