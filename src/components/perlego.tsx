@@ -22,7 +22,7 @@ export function SearchHome() {
   const { query, setQuery } = useOnboarding();
   const [value, setValue] = useState(query);
   const navigate = useNavigate();
-  const submit = (event?: FormEvent) => { event?.preventDefault(); if (!value.trim()) return; setQuery(value.trim()); navigate({ to: "/setup" }); };
+  const submit = (event?: FormEvent) => { event?.preventDefault(); if (!value.trim()) return; setQuery(value.trim()); navigate({ to: "/topics" }); };
   return <main className="min-h-screen bg-paper">
     <Header />
     <section className="mx-auto flex min-h-[calc(100vh-72px)] max-w-5xl flex-col items-center px-5 pt-[11vh] text-center sm:px-8">
@@ -36,7 +36,7 @@ export function SearchHome() {
         <Button type="submit" size="lg" className="hidden sm:inline-flex">Find my chapters <ArrowRight size={18} /></Button>
         <Button type="submit" size="icon" aria-label="Find my chapters" className="sm:hidden"><ArrowRight size={18} /></Button>
       </form>
-      <div className="mt-7 flex max-w-4xl flex-wrap justify-center gap-2.5">{examples.map((example) => <button key={example} onClick={() => { setValue(example); setQuery(example); navigate({ to: "/setup" }); }} className="rounded-full border border-border bg-background px-4 py-2.5 text-left text-sm text-secondary-foreground transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring">{example}</button>)}</div>
+      <div className="mt-7 flex max-w-4xl flex-wrap justify-center gap-2.5">{examples.map((example) => <button key={example} onClick={() => { setValue(example); setQuery(example); navigate({ to: "/topics" }); }} className="rounded-full border border-border bg-background px-4 py-2.5 text-left text-sm text-secondary-foreground transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring">{example}</button>)}</div>
       <p className="mt-10 flex items-center gap-2 text-sm text-muted-foreground"><Check size={16} className="text-success" /> No account needed to see your matches</p>
     </section>
   </main>;
