@@ -27,6 +27,8 @@ export function DashboardPage() {
   const sessions = shelf.flatMap((book) => matchedChapters(book, s.topics).map((chapter) => ({ book, chapter, key: `${book.id}:${chapter.number}` })));
   const minutes = sessions.reduce((n, x) => n + x.chapter.minutes, 0);
   const done = sessions.filter((x) => s.chapters[x.key]?.status === 'Done').length;
+  const readingList = s.reading.flatMap((key) => { const found = findChapterByKey(key); return found ? [{ key, ...found }] : []; });
+  const readingMinutes = readingList.reduce((n, x) => n + x.chapter.minutes, 0);
   const open = (book: Book, chapter?: Book['chapters'][number]) => { s.selectBook(book, chapter ?? matchedChapters(book, s.topics)[0] ?? book.chapters[0]); navigate({ to: '/reader' }); };
   const research = (event: FormEvent) => { event.preventDefault(); const next = value.trim(); if (!next) return; s.setQuery(next); s.setTopics(resultsFor(next).books[0]?.topics.map((t) => t.label) ?? []); navigate({ to: '/results' }); };
   const signOut = () => { s.setSignedUp(false); navigate({ to: '/' }); };
@@ -46,6 +48,23 @@ export function DashboardPage() {
       <p className="text-sm font-semibold text-primary">Welcome to Perlego</p>
       <h1 className="mt-2 font-display text-4xl sm:text-5xl">Good to see you, {firstName}.</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">Your student plan is active. Here's everything matched to “{s.query || 'your last search'}”.</p>
+
+      <section className="mt-8 rounded-lg border border-border bg-background p-6 shadow-warm-lg sm:p-8">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div><p className="flex items-center gap-2 text-sm font-semibold text-primary"><ListChecks size={16} /> Your reading list</p>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">{readingList.length ? `${readingList.length} ${readingList.length === 1 ? 'chapter' : 'chapters'} lined up` : 'No chapters saved yet'}</h2>
+            <p className="mt-2 text-muted-foreground">{readingList.length ? `About ${readingMinutes} min of focused reading in total.` : 'Add chapters from your search results or the recommendations below.'}</p></div>
+          {readingList.length ? <Button onClick={() => { const next = readingList.find((x) => s.chapters[x.key]?.status !== 'Done') ?? readingList[0]; if (next) open(next.book, next.chapter); }}>Continue reading <ArrowRight size={17} /></Button> : <Button onClick={() => navigate({ to: '/results' })}>Find chapters <Search size={17} /></Button>}
+        </div>
+        {readingList.length ? <ul className="mt-6 divide-y divide-border border-t border-border">{readingList.map(({ key, book, chapter }) => <li key={key} className="flex flex-wrap items-center gap-4 py-4">
+          <div className="min-w-0 flex-1"><p className="font-ui text-lg font-bold"><strong className="font-bold">Chapter {chapter.number}</strong> · {chapter.title}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{book.title} · {book.author}</p></div>
+          <span className="flex items-center gap-2 text-sm text-muted-foreground"><Clock3 size={16} /> {chapter.minutes} min read</span>
+          <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">{s.chapters[key]?.status ?? 'Not started'}</span>
+          <div className="flex gap-2"><Button size="sm" onClick={() => open(book, chapter)}>Read</Button>
+            <Button size="sm" variant="ghost" aria-label={`Remove chapter ${chapter.number} of ${book.title} from your reading list`} onClick={() => s.removeReading(key)}>Remove <X size={15} /></Button></div>
+        </li>)}</ul> : null}
+      </section>
 
       <div className="mt-8 grid gap-4 border-y border-border py-7 sm:grid-cols-3">
         <div><p className="text-sm text-muted-foreground">Bookshelf</p><p className="mt-2 font-display text-3xl">{shelf.length} {shelf.length === 1 ? 'book' : 'books'}</p></div>
