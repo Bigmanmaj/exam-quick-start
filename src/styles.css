@@ -19,6 +19,9 @@
  */
 
 @theme inline {
+  --font-display: "DM Serif Display", Georgia, serif;
+  --font-ui: "Manrope", sans-serif;
+  --font-reading: Georgia, serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -33,6 +36,7 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -59,29 +63,54 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-paper: var(--paper);
+  --color-sepia: var(--sepia);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-highlight: var(--highlight);
+  --shadow-warm: 0 2px 8px oklch(0.36 0.04 45 / 8%), 0 1px 2px oklch(0.25 0.02 45 / 8%);
+  --shadow-warm-lg: 0 12px 30px oklch(0.36 0.06 45 / 12%), 0 3px 8px oklch(0.25 0.02 45 / 8%);
+  --spacing-reading: 40rem;
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
+  --primary: oklch(0.47 0.27 277);
+  --primary-hover: oklch(0.39 0.24 277);
   --primary-foreground: oklch(0.984 0.003 247.858);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted: oklch(0.965 0.004 75);
+  --muted-foreground: oklch(0.45 0.01 70);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.91 0.008 70);
+  --input: oklch(0.82 0.008 70);
+  --ring: oklch(0.86 0.08 277);
+  --paper: oklch(0.982 0.006 75);
+  --sepia: oklch(0.92 0.02 75);
+  --ink: oklch(0.28 0.005 70);
+  --ink-foreground: oklch(0.94 0.01 75);
+  --primary-soft: oklch(0.94 0.035 277);
+  --success: oklch(0.47 0.16 145);
+  --success-soft: oklch(0.95 0.04 145);
+  --warning: oklch(0.54 0.13 60);
+  --warning-soft: oklch(0.95 0.04 75);
+  --highlight: oklch(0.9 0.13 92);
+  --reader-fade: var(--background);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -140,5 +169,31 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: "Inter", sans-serif;
+    letter-spacing: 0;
   }
+
+  button, a, input, textarea { outline-offset: 2px; }
+}
+
+@layer components {
+  .field-label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 700; }
+  .field { width: 100%; height: 3rem; border-radius: 0.375rem; border: 1px solid var(--input); background: var(--background); padding: 0 0.875rem; color: var(--foreground); }
+  .field:focus { outline: none; box-shadow: 0 0 0 4px var(--ring); border-color: var(--primary); }
+  .tool-button { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border-radius: 0.375rem; }
+  .tool-button:hover { background: var(--muted); }
+  .tool-button:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--ring); }
+  .cover-violet { background: oklch(0.82 0.12 300); }
+  .cover-orange { background: oklch(0.84 0.13 55); }
+  .cover-teal { background: oklch(0.8 0.1 185); }
+  .cover-yellow { background: oklch(0.91 0.15 95); }
+  .cover-pink { background: oklch(0.86 0.1 350); }
+  .cover-lime { background: oklch(0.87 0.13 125); }
+  .theme-paper { background: var(--background); }
+  .theme-sepia { background: var(--sepia); }
+  .theme-ink { background: var(--ink); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
