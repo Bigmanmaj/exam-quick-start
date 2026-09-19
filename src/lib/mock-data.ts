@@ -27,9 +27,10 @@ const slug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').
 // real page count, reading time at roughly 1.5 minutes per page. Demo data only.
 function chaptersFor(entry: LibraryBook): Chapter[] {
   const count = Math.max(1, entry.subtopics.length);
-  const span = Math.max(12, Math.floor((entry.pageCount - 20) / count));
+  const stride = Math.max(24, Math.floor((entry.pageCount - 20) / count));
+  const span = Math.min(28, Math.max(16, stride - 4));
   return entry.subtopics.map((subtopic, index) => {
-    const start = 21 + index * span;
+    const start = 21 + index * stride;
     const end = start + span - 1;
     return {
       number: index + 2,
