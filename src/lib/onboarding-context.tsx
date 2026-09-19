@@ -14,11 +14,11 @@ const first = resultSets[0]?.books[0];
 if (!first?.chapters[0]) throw new Error('Missing mock data');
 const initial: State = { query: '', examDate: '', topics: [], plan: [], reading: [], bookId: first.id, chapterNumber: first.chapters[0].number, provider:'email', payment:'card', signedUp:false, fontSize:18, theme:'paper', chapters:{}, name:'', email:'', course:'' };
 const emptyChapter = { bookmarked:false, highlighted:false, note:'', position:0, status:'Not started' as const };
-function useStateModel() {
+function useStateModel(persist = true) {
   const [state,setState] = useState<State>(initial);
   const [hydrated,setHydrated] = useState(false);
-  useEffect(() => { try { const raw = localStorage.getItem('perlego-sprint-v1'); if(raw) { const parsed = schema.safeParse(JSON.parse(raw)); if(parsed.success) setState(parsed.data); } } catch {} setHydrated(true); },[]);
-  useEffect(() => { if(hydrated) { try { localStorage.setItem('perlego-sprint-v1',JSON.stringify(state)); } catch {} } },[state,hydrated]);
+  useEffect(() => { if (!persist) { setHydrated(true); return; } try { const raw = localStorage.getItem('perlego-sprint-v1'); if(raw) { const parsed = schema.safeParse(JSON.parse(raw)); if(parsed.success) setState(parsed.data); } } catch {} setHydrated(true); },[persist]);
+  useEffect(() => { if(persist&&hydrated) { try { localStorage.setItem('perlego-sprint-v1',JSON.stringify(state)); } catch {} } },[state,hydrated,persist]);
   const patch = (value: Partial<State>) => setState(s=>({...s,...value}));
   const selectedBook = resultSets.flatMap(s=>s.books).find(b=>b.id===state.bookId) ?? first as Book;
   const selectedChapter = selectedBook.chapters.find(c=>c.number===state.chapterNumber) ?? selectedBook.chapters[0] as Chapter;
@@ -50,7 +50,9 @@ const Context = globalScope.__perlegoOnboardingContext ?? (globalScope.__perlego
 export function OnboardingProvider({children}:{children:ReactNode}) { const value=useStateModel(); return <Context.Provider value={value}>{children}</Context.Provider>; }
 export function useOnboarding(){
   const value=useContext(Context);
-  const fallback=useStateModel();
+  // A non-persisting fallback prevents a stale hot-reload tree from blanking
+  // the preview while the root provider remounts.
+  const fallback=useStateModel(false);
   return value ?? fallback;
 }
 export function useOnboardingOptional(){return useContext(Context);}
