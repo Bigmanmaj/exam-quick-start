@@ -25,18 +25,31 @@ const slug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').
 
 // Chapters are generated from each title's subtopics: even page ranges across the
 // real page count, reading time at roughly 1.5 minutes per page. Demo data only.
+const hash = (value: string) => {
+  let h = 0;
+  for (let i = 0; i < value.length; i += 1) h = (h * 31 + value.charCodeAt(i)) % 100000;
+  return h;
+};
+
 function chaptersFor(entry: LibraryBook): Chapter[] {
   const count = Math.max(1, entry.subtopics.length);
-  const stride = Math.max(24, Math.floor((entry.pageCount - 20) / count));
-  const span = Math.min(28, Math.max(16, stride - 4));
+  // Front matter, then the body of the book split across its subtopics.
+  const body = Math.max(count * 12, entry.pageCount - 30);
+  const stride = Math.floor(body / count);
+  let cursor = 19 + (hash(entry.id) % 8);
   return entry.subtopics.map((subtopic, index) => {
-    const start = 21 + index * stride;
+    // Chapters are deliberately uneven: +/- 30% around the average length.
+    const wobble = ((hash(`${entry.id}:${subtopic}`) % 61) - 30) / 100;
+    const span = Math.max(9, Math.round(stride * (1 + wobble)));
+    const start = cursor;
     const end = start + span - 1;
+    cursor = end + 1;
     return {
       number: index + 2,
       title: subtopic,
       pages: `${start}–${end}`,
-      minutes: Math.round((span * 1.5) / 5) * 5 || 5,
+      // ~1.6 minutes per page, rounded to the nearest 5 for a readable estimate.
+      minutes: Math.max(10, Math.round((span * 1.6) / 5) * 5),
       preview: `${entry.description} This chapter focuses on ${subtopic.toLowerCase()}.`,
     };
   });
