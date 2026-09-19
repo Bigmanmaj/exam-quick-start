@@ -1,10 +1,10 @@
 import { useNavigate, Link } from '@tanstack/react-router';
-import { ArrowRight, BookOpen, Clock3, LogOut, Search, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, Check, Clock3, ListChecks, LogOut, Plus, Search, Sparkles, X } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Logo } from './perlego';
 import { useOnboarding } from '@/lib/onboarding-context';
-import { chapterTopics, matchedChapters, matchingBooks, resultSets, resultsFor, type Book } from '@/lib/mock-data';
+import { chapterTopics, findChapterByKey, matchedChapters, matchingBooks, resultSets, resultsFor, type Book } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
 
 const providerLabel = { email: 'Email', unidays: 'UniDays', google: 'Google', apple: 'Apple' } as const;
