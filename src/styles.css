@@ -162,6 +162,11 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+  }
+
   * {
     border-color: var(--color-border);
   }
@@ -194,6 +199,30 @@
   .theme-ink { background: var(--ink); }
 }
 
+@utility scroll-reveal {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 500ms ease, transform 500ms ease;
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility scroll-cue {
+  & svg {
+    animation: cue-bob 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes cue-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(0.3rem); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .scroll-reveal { opacity: 1; transform: none; }
+  .scroll-cue svg { animation: none; }
 }
