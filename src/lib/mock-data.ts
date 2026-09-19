@@ -59,8 +59,8 @@ function chaptersFor(entry: LibraryBook): Chapter[] {
       number: index + 2,
       title: subtopic,
       pages: `${start}–${end}`,
-      // ~1.6 minutes per page, rounded to the nearest 5 for a readable estimate.
-      minutes: Math.max(10, Math.round((span * 1.6) / 5) * 5),
+      // Friendly estimates: snapped to the nearest nice multiple of 5.
+      minutes: niceMinutes(Math.max(14, span * 1.6)),
       preview: `${entry.description} This chapter focuses on ${subtopic.toLowerCase()}.`,
     };
   });
