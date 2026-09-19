@@ -42,8 +42,8 @@ export const library: LibraryBook[] = [
       "RB003",
       "RB004"
     ],
-    "cover": "https://books.google.com/books/content?id=KAjBXwAACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=KAjBXwAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/13290711-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/13290711-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Thinking,_Fast_and_Slow.html?id=KAjBXwAACAAJ"
   },
   {
@@ -71,8 +71,8 @@ export const library: LibraryBook[] = [
       "RB003",
       "RB004"
     ],
-    "cover": "https://books.google.com/books/content?id=FrOMEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=FrOMEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/6402116-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/6402116-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Nudge.html?id=FrOMEAAAQBAJ"
   },
   {
@@ -100,8 +100,8 @@ export const library: LibraryBook[] = [
       "RB002",
       "RB004"
     ],
-    "cover": "https://books.google.com/books/content?id=BBMlzgEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=BBMlzgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/431011-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/431011-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Influence.html?id=BBMlzgEACAAJ"
   },
   {
@@ -216,8 +216,8 @@ export const library: LibraryBook[] = [
       "RB014",
       "RB015"
     ],
-    "cover": "https://books.google.com/books/content?id=heCtnQEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=heCtnQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/10007224-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/10007224-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/The_Design_of_Everyday_Things.html?id=heCtnQEACAAJ"
   },
   {
@@ -274,8 +274,8 @@ export const library: LibraryBook[] = [
       "RB008",
       "RB010"
     ],
-    "cover": "https://books.google.com/books/content?id=1fbingEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=1fbingEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/9039370-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/9039370-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Contagious.html?id=1fbingEACAAJ"
   },
   {
@@ -303,8 +303,8 @@ export const library: LibraryBook[] = [
       "RB008",
       "RB009"
     ],
-    "cover": "https://books.google.com/books/content?id=prDZAQAACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=prDZAQAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/7104760-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/7104760-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/The_Lean_Startup.html?id=prDZAQAACAAJ"
   },
   {
@@ -332,8 +332,8 @@ export const library: LibraryBook[] = [
       "RB008",
       "RB009"
     ],
-    "cover": "https://books.google.com/books/content?id=_2ZRzQEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=_2ZRzQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/9700654-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/9700654-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Inspired.html?id=_2ZRzQEACAAJ"
   },
   {
@@ -361,8 +361,8 @@ export const library: LibraryBook[] = [
       "RB008",
       "RB009"
     ],
-    "cover": "https://books.google.com/books/content?id=y1ONEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=y1ONEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/11390852-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/11390852-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Platform_Revolution.html?id=y1ONEAAAQBAJ"
   },
   {
@@ -390,8 +390,8 @@ export const library: LibraryBook[] = [
       "RB014",
       "RB015"
     ],
-    "cover": "https://books.google.com/books/content?id=GraMEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=GraMEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/8042539-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/8042539-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Algorithms_to_Live_By.html?id=GraMEAAAQBAJ"
   },
   {
@@ -419,8 +419,8 @@ export const library: LibraryBook[] = [
       "RB013",
       "RB015"
     ],
-    "cover": "https://books.google.com/books/content?id=3gOOEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=3gOOEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/8136557-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/8136557-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Weapons_of_Math_Destruction.html?id=3gOOEAAAQBAJ"
   },
   {
@@ -448,8 +448,8 @@ export const library: LibraryBook[] = [
       "RB013",
       "RB014"
     ],
-    "cover": "https://books.google.com/books/content?id=KGCNEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=KGCNEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/10678431-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/10678431-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/The_Alignment_Problem.html?id=KGCNEAAAQBAJ"
   },
   {
@@ -506,8 +506,8 @@ export const library: LibraryBook[] = [
       "RB019",
       "RB020"
     ],
-    "cover": "https://books.google.com/books/content?id=zfuOEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=zfuOEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/8634250-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/8634250-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Sapiens.html?id=zfuOEAAAQBAJ"
   },
   {
@@ -535,8 +535,8 @@ export const library: LibraryBook[] = [
       "RB019",
       "RB020"
     ],
-    "cover": "https://books.google.com/books/content?id=ivmMEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=ivmMEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/7253519-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/7253519-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Why_Nations_Fail.html?id=ivmMEAAAQBAJ"
   },
   {
@@ -651,8 +651,8 @@ export const library: LibraryBook[] = [
       "RB024",
       "RB025"
     ],
-    "cover": "https://books.google.com/books/content?id=RaWMEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=RaWMEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/10491911-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/10491911-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/The_New_Map.html?id=RaWMEAAAQBAJ"
   },
   {
@@ -709,8 +709,8 @@ export const library: LibraryBook[] = [
       "RB023",
       "RB025"
     ],
-    "cover": "https://books.google.com/books/content?id=vi-loAEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=vi-loAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/7910870-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/7910870-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/The_Sixth_Extinction.html?id=vi-loAEACAAJ"
   },
   {
@@ -738,8 +738,8 @@ export const library: LibraryBook[] = [
       "RB023",
       "RB024"
     ],
-    "cover": "https://books.google.com/books/content?id=6aMfnwEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=6aMfnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/14420637-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/14420637-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Thinking_in_Systems.html?id=6aMfnwEACAAJ"
   },
   {
@@ -767,8 +767,8 @@ export const library: LibraryBook[] = [
       "RB028",
       "RB029"
     ],
-    "cover": "https://books.google.com/books/content?id=1vcF0QEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=1vcF0QEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/8188891-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/8188891-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/Make_It_Stick.html?id=1vcF0QEACAAJ"
   },
   {
@@ -854,8 +854,8 @@ export const library: LibraryBook[] = [
       "RB027",
       "RB028"
     ],
-    "cover": "https://books.google.com/books/content?id=BL2OEAAAQBAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
-    "thumbnail": "https://books.google.com/books/content?id=BL2OEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cover": "https://covers.openlibrary.org/b/id/10690900-L.jpg",
+    "thumbnail": "https://covers.openlibrary.org/b/id/10690900-L.jpg",
     "googleBooksPage": "https://books.google.com/books/about/The_Scout_Mindset.html?id=BL2OEAAAQBAJ"
   },
   {
