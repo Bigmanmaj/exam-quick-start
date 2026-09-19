@@ -42,6 +42,11 @@ const niceMinutes = (raw: number): number => {
   return best;
 };
 
+// A book's overall reading time: the sum of its chapters, snapped to the
+// nearest nice value so totals never read "42 min".
+export const bookMinutes = (book: Book): number =>
+  niceMinutes(book.chapters.reduce((n, c) => n + c.minutes, 0));
+
 function chaptersFor(entry: LibraryBook): Chapter[] {
   const count = Math.max(1, entry.subtopics.length);
   // Front matter, then the body of the book split across its subtopics.
