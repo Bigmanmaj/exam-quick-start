@@ -31,17 +31,22 @@ type OnboardingState = {
   cycleTopic: (topic: string) => void;
 };
 
-const fallback = resultSets[0];
-const initialBook = fallback?.books[0];
-const initialChapter = initialBook?.chapters[0];
-if (!initialBook || !initialChapter) throw new Error("Mock onboarding data is incomplete");
+function getInitialData() {
+  const fallback = resultSets[0];
+  const initialBook = fallback?.books[0];
+  const initialChapter = initialBook?.chapters[0];
+  if (!fallback || !initialBook || !initialChapter) throw new Error("Mock onboarding data is incomplete");
+  return { fallback, initialBook, initialChapter };
+}
+
+const initial = getInitialData();
 
 const OnboardingContext = createContext<OnboardingState | null>(null);
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
-  const [query, setQuery] = useState(fallback.prompt);
-  const [selectedBook, setSelectedBook] = useState(initialBook);
-  const [selectedChapter, setSelectedChapter] = useState(initialChapter);
+  const [query, setQuery] = useState(initial.fallback.prompt);
+  const [selectedBook, setSelectedBook] = useState<Book>(initial.initialBook);
+  const [selectedChapter, setSelectedChapter] = useState<Chapter>(initial.initialChapter);
   const [provider, setProvider] = useState<Provider>("email");
   const [payment, setPayment] = useState<PaymentMethod>("card");
   const [signedUp, setSignedUp] = useState(false);
