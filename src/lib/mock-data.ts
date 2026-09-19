@@ -33,7 +33,7 @@ const hash = (value: string) => {
 
 // Reading estimates snap to friendly values: multiples of 5 that people expect
 // to see (15, 30, 45...), never awkward numbers like 35 or 55. Demo data only.
-const NICE_MINUTES: readonly number[] = [15, 20, 25, 30, 40, 45, 60, 75, 90];
+const NICE_MINUTES: readonly number[] = [15, 20, 25, 30, 40, 45, 60, 75, 90, 105, 120, 150, 180, 210, 240, 270, 300, 330];
 const niceMinutes = (raw: number): number => {
   let best: number = NICE_MINUTES[0] ?? 15;
   for (const value of NICE_MINUTES) {
@@ -42,10 +42,10 @@ const niceMinutes = (raw: number): number => {
   return best;
 };
 
-// A book's overall reading time: the sum of its chapters, snapped to the
-// nearest nice value so totals never read "42 min".
+// A book's overall reading time: the sum of its chapter estimates. Each
+// chapter is a multiple of 5, so totals always are too.
 export const bookMinutes = (book: Book): number =>
-  niceMinutes(book.chapters.reduce((n, c) => n + c.minutes, 0));
+  book.chapters.reduce((n, c) => n + c.minutes, 0);
 
 function chaptersFor(entry: LibraryBook): Chapter[] {
   const count = Math.max(1, entry.subtopics.length);
