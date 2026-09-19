@@ -25,18 +25,31 @@ const slug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').
 
 // Chapters are generated from each title's subtopics: even page ranges across the
 // real page count, reading time at roughly 1.5 minutes per page. Demo data only.
+const hash = (value: string) => {
+  let h = 0;
+  for (let i = 0; i < value.length; i += 1) h = (h * 31 + value.charCodeAt(i)) % 100000;
+  return h;
+};
+
 function chaptersFor(entry: LibraryBook): Chapter[] {
   const count = Math.max(1, entry.subtopics.length);
-  const stride = Math.max(24, Math.floor((entry.pageCount - 20) / count));
-  const span = Math.min(28, Math.max(16, stride - 4));
+  // Front matter, then the body of the book split across its subtopics.
+  const body = Math.max(count * 12, entry.pageCount - 30);
+  const stride = Math.floor(body / count);
+  let cursor = 19 + (hash(entry.id) % 8);
   return entry.subtopics.map((subtopic, index) => {
-    const start = 21 + index * stride;
+    // Chapters are deliberately uneven: +/- 30% around the average length.
+    const wobble = ((hash(`${entry.id}:${subtopic}`) % 61) - 30) / 100;
+    const span = Math.min(46, Math.max(9, Math.round(stride * (1 + wobble))));
+    const start = cursor;
     const end = start + span - 1;
+    cursor = end + 1;
     return {
       number: index + 2,
       title: subtopic,
       pages: `${start}–${end}`,
-      minutes: Math.round((span * 1.5) / 5) * 5 || 5,
+      // ~1.6 minutes per page, rounded to the nearest 5 for a readable estimate.
+      minutes: Math.max(10, Math.round((span * 1.6) / 5) * 5),
       preview: `${entry.description} This chapter focuses on ${subtopic.toLowerCase()}.`,
     };
   });
@@ -133,17 +146,31 @@ export function matchedChapters(book: Book, topics: string[]) {
 
 export function matchingBooks(query: string, topics: string[]) {
   const active = topics.length ? topics : resultsFor(query).books[0]?.topics.map((t) => t.label) ?? [];
-  return resultsFor(query)
+  const terms = words(query);
+  const scored = resultsFor(query)
     .books.map((book) => {
-      const covered = book.topics.filter((t) => active.includes(t.label) && t.covered).map((t) => t.label);
+      const own = book.topics.filter((t) => t.covered).map((t) => t.label);
+      const covered = own.filter((label) => active.includes(label));
+      // Scored against the book's own topics, not the pooled topic list, so a
+      // short focused book is not punished for the breadth of the search.
+      const depth = covered.length / Math.max(1, Math.min(own.length || active.length, active.length));
+      const breadth = covered.length / Math.max(1, active.length);
+      const text = Math.min(1, score(book, terms) / 18);
+      const blend = depth * 0.5 + breadth * 0.25 + text * 0.25;
+      // Nudged by a stable per-book offset so matches read as distinct scores.
+      const jitter = (hash(`${book.id}:${active.length}`) % 9) - 4;
+      const match = covered.length === 0 && text === 0 ? 0 : Math.min(98, Math.max(52, Math.round(blend * 100) + jitter));
       return {
         ...book,
         chapters: matchedChapters(book, active),
         topics: active.map((label) => ({ label, covered: covered.includes(label) })),
-        match: Math.round((covered.length / Math.max(1, active.length)) * 100),
+        match,
       };
     })
     .sort((a, b) => b.match - a.match);
+  // Only surface confident matches; keep at least three results.
+  const confident = scored.filter((book) => book.match >= 60);
+  return confident.length >= 3 ? confident : scored.filter((book) => book.match > 0).slice(0, 3);
 }
 
 /** Sample study text. Composed from the published description — not the real book text. */
