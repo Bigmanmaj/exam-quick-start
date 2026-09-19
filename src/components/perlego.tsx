@@ -123,6 +123,14 @@ export function ResultsPage() {
     setTopics(resultsFor(next).books[0]?.topics.map((t) => t.label) ?? []);
   };
   const choose = (book: Book, chapter?: Book["chapters"][number]) => { selectBook(book, chapter ?? book.chapters[0]); navigate({ to: "/preview" }); };
+  const addToPlan = (book: Book) => {
+    if (plan.includes(book.id)) { toggleBook(book); return; }
+    addBook(book);
+    const chapters = matchedChapters(book, topics);
+    (chapters.length ? chapters : book.chapters).forEach((chapter) => addReading(book, chapter));
+    selectBook(book, chapters[0] ?? book.chapters[0]);
+    navigate({ to: "/study" });
+  };
   return <main className="min-h-screen bg-paper"><Header back="/" /><section className="mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8">
     <p className="text-sm font-semibold text-primary">Your study matches</p>
     <form onSubmit={research} className="mt-3 flex w-full max-w-3xl items-center gap-2 rounded-lg border border-input bg-background p-2 shadow-warm focus-within:ring-4 focus-within:ring-ring">
