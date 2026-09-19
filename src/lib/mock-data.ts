@@ -33,10 +33,14 @@ const hash = (value: string) => {
 
 // Reading estimates snap to friendly values: multiples of 5 that people expect
 // to see (15, 30, 45...), never awkward numbers like 35 or 55. Demo data only.
-const NICE_MINUTES: number[] = [15, 20, 25, 30, 40, 45, 60, 75, 90];
-const niceMinutes = (raw: number) =>
-  NICE_MINUTES.reduce<number>((best, value) =>
-    Math.abs(value - raw) < Math.abs(best - raw) ? value : best, NICE_MINUTES[0]);
+const NICE_MINUTES = [15, 20, 25, 30, 40, 45, 60, 75, 90] as const;
+const niceMinutes = (raw: number) => {
+  let best = NICE_MINUTES[0];
+  for (const value of NICE_MINUTES) {
+    if (Math.abs(value - raw) < Math.abs(best - raw)) best = value;
+  }
+  return best;
+};
 
 function chaptersFor(entry: LibraryBook): Chapter[] {
   const count = Math.max(1, entry.subtopics.length);
