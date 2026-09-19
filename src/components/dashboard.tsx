@@ -29,7 +29,8 @@ export function DashboardPage() {
   const done = sessions.filter((x) => s.chapters[x.key]?.status === 'Done').length;
   const readingList = s.reading.flatMap((key) => { const found = findChapterByKey(key); return found ? [{ key, ...found }] : []; });
   const readingMinutes = readingList.reduce((n, x) => n + x.chapter.minutes, 0);
-  const open = (book: Book, chapter?: Book['chapters'][number]) => { s.selectBook(book, chapter ?? matchedChapters(book, s.topics)[0] ?? book.chapters[0]); navigate({ to: '/reader' }); };
+  const guest = !s.signedUp;
+  const open = (book: Book, chapter?: Book['chapters'][number]) => { s.selectBook(book, chapter ?? matchedChapters(book, s.topics)[0] ?? book.chapters[0]); navigate({ to: guest ? '/preview' : '/reader' }); };
   const research = (event: FormEvent) => { event.preventDefault(); const next = value.trim(); if (!next) return; s.setQuery(next); s.setTopics(resultsFor(next).books[0]?.topics.map((t) => t.label) ?? []); navigate({ to: '/results' }); };
   const signOut = () => { s.setSignedUp(false); navigate({ to: '/' }); };
 
