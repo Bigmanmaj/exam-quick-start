@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Bookmark, Check, CheckCircle2, ChevronDown, Clock3, Highlighter, ListChecks, Minus, Plus, Quote, Search, Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { BookCover } from "@/components/book-cover";
 import { cn } from "@/lib/utils";
 import { examples, resultsFor, matchingBooks, matchedChapters, type Book } from "@/lib/mock-data";
 import { useOnboarding } from "@/lib/onboarding-context";

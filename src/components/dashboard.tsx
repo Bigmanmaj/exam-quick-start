@@ -2,6 +2,7 @@ import { useNavigate, Link } from '@tanstack/react-router';
 import { ArrowRight, BookOpen, Check, Clock3, ListChecks, LogOut, Plus, Search, Sparkles, X } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
+import { BookCover } from '@/components/book-cover';
 import { Logo } from './perlego';
 import { useOnboarding } from '@/lib/onboarding-context';
 import { chapterTopics, findChapterByKey, matchedChapters, matchingBooks, resultSets, resultsFor, type Book } from '@/lib/mock-data';
