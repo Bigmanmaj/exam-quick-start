@@ -48,5 +48,9 @@ type Model = ReturnType<typeof useStateModel>;
 const globalScope = globalThis as typeof globalThis & { __perlegoOnboardingContext?: React.Context<Model|null> };
 const Context = globalScope.__perlegoOnboardingContext ?? (globalScope.__perlegoOnboardingContext = createContext<Model|null>(null));
 export function OnboardingProvider({children}:{children:ReactNode}) { const value=useStateModel(); return <Context.Provider value={value}>{children}</Context.Provider>; }
-export function useOnboarding(){const value=useContext(Context);if(!value)throw new Error('Missing onboarding provider');return value;}
+export function useOnboarding(){
+  const value=useContext(Context);
+  const fallback=useStateModel();
+  return value ?? fallback;
+}
 export function useOnboardingOptional(){return useContext(Context);}
