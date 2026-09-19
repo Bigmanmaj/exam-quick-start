@@ -31,6 +31,22 @@ const hash = (value: string) => {
   return h;
 };
 
+// Reading estimates snap to friendly values: multiples of 5 that people expect
+// to see (15, 30, 45...), never awkward numbers like 35 or 55. Demo data only.
+const NICE_MINUTES: readonly number[] = [15, 20, 25, 30, 40, 45, 60, 75, 90, 105, 120, 150, 180, 210, 240, 270, 300, 330];
+const niceMinutes = (raw: number): number => {
+  let best: number = NICE_MINUTES[0] ?? 15;
+  for (const value of NICE_MINUTES) {
+    if (Math.abs(value - raw) < Math.abs(best - raw)) best = value;
+  }
+  return best;
+};
+
+// A book's overall reading time: the sum of its chapter estimates. Each
+// chapter is a multiple of 5, so totals always are too.
+export const bookMinutes = (book: Book): number =>
+  book.chapters.reduce((n, c) => n + c.minutes, 0);
+
 function chaptersFor(entry: LibraryBook): Chapter[] {
   const count = Math.max(1, entry.subtopics.length);
   // Front matter, then the body of the book split across its subtopics.
@@ -38,18 +54,19 @@ function chaptersFor(entry: LibraryBook): Chapter[] {
   const stride = Math.floor(body / count);
   let cursor = 19 + (hash(entry.id) % 8);
   return entry.subtopics.map((subtopic, index) => {
-    // Chapters are deliberately uneven: +/- 30% around the average length.
-    const wobble = ((hash(`${entry.id}:${subtopic}`) % 61) - 30) / 100;
-    const span = Math.min(46, Math.max(9, Math.round(stride * (1 + wobble))));
+    // Chapters are deliberately uneven: +/- 35% around the average length,
+    // scaling with the book's own page count so estimates genuinely differ.
+    const wobble = ((hash(`${entry.id}:${subtopic}`) % 71) - 35) / 100;
+    const span = Math.max(8, Math.round(stride * (1 + wobble)));
     const start = cursor;
-    const end = start + span - 1;
+    const end = Math.min(entry.pageCount, start + span - 1);
     cursor = end + 1;
     return {
       number: index + 2,
       title: subtopic,
       pages: `${start}–${end}`,
-      // ~1.6 minutes per page, rounded to the nearest 5 for a readable estimate.
-      minutes: Math.max(10, Math.round((span * 1.6) / 5) * 5),
+      // ~1.6 minutes per page, snapped to the nearest nice multiple of 5.
+      minutes: niceMinutes(Math.max(14, (end - start + 1) * 1.6)),
       preview: `${entry.description} This chapter focuses on ${subtopic.toLowerCase()}.`,
     };
   });
