@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { JourneyGuard } from "../components/journey-guard";
 import { OnboardingProvider } from "../lib/onboarding-context";
 
 function NotFoundComponent() {
@@ -116,7 +117,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <OnboardingProvider><Outlet /></OnboardingProvider>
+      <OnboardingProvider><JourneyGuard /><Outlet /></OnboardingProvider>
     </QueryClientProvider>
   );
 }
