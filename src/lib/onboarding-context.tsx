@@ -42,6 +42,11 @@ function useStateModel() {
     setPosition:(position:number)=>patchChapter({position}), startSession:()=>patchChapter({status:chapterState.status==='Done'?'Done':'In progress'}), completeChapter:()=>patchChapter({status:'Done'}),
   };
 }
-const Context = createContext<ReturnType<typeof useStateModel>|null>(null);
+// Keep one context instance per runtime so hot reloads (which can leave two
+// copies of this module in memory) never break provider lookup.
+type Model = ReturnType<typeof useStateModel>;
+const globalScope = globalThis as typeof globalThis & { __perlegoOnboardingContext?: React.Context<Model|null> };
+const Context = globalScope.__perlegoOnboardingContext ?? (globalScope.__perlegoOnboardingContext = createContext<Model|null>(null));
 export function OnboardingProvider({children}:{children:ReactNode}) { const value=useStateModel(); return <Context.Provider value={value}>{children}</Context.Provider>; }
 export function useOnboarding(){const value=useContext(Context);if(!value)throw new Error('Missing onboarding provider');return value;}
+export function useOnboardingOptional(){return useContext(Context);}
