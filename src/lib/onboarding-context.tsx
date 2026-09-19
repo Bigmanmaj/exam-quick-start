@@ -1,86 +1,42 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
-import { resultSets, resultsFor, type Book, type Chapter } from "./mock-data";
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { z } from 'zod';
+import { resultSets, resultsFor, type Book, type Chapter } from './mock-data';
 
-type PaymentMethod = "card" | "google" | "apple";
-type Provider = "unidays" | "google" | "apple" | "email";
-type ReaderTheme = "paper" | "sepia" | "ink";
-
-type OnboardingState = {
-  query: string;
-  setQuery: (value: string) => void;
-  selectedBook: Book;
-  selectedChapter: Chapter;
-  selectBook: (book: Book, chapter?: Chapter) => void;
-  provider: Provider;
-  setProvider: (value: Provider) => void;
-  payment: PaymentMethod;
-  setPayment: (value: PaymentMethod) => void;
-  signedUp: boolean;
-  setSignedUp: (value: boolean) => void;
-  fontSize: number;
-  setFontSize: (value: number) => void;
-  theme: ReaderTheme;
-  setTheme: (value: ReaderTheme) => void;
-  bookmarked: boolean;
-  setBookmarked: (value: boolean) => void;
-  highlighted: boolean;
-  setHighlighted: (value: boolean) => void;
-  note: string;
-  setNote: (value: string) => void;
-  topicStatus: Record<string, "Not started" | "In progress" | "Done">;
-  cycleTopic: (topic: string) => void;
-};
-
-function getInitialData() {
-  const fallback = resultSets[0];
-  const initialBook = fallback?.books[0];
-  const initialChapter = initialBook?.chapters[0];
-  if (!fallback || !initialBook || !initialChapter) throw new Error("Mock onboarding data is incomplete");
-  return { fallback, initialBook, initialChapter };
-}
-
-const initial = getInitialData();
-
-const OnboardingContext = createContext<OnboardingState | null>(null);
-
-export function OnboardingProvider({ children }: { children: ReactNode }) {
-  const [query, setQuery] = useState(initial.fallback.prompt);
-  const [selectedBook, setSelectedBook] = useState<Book>(initial.initialBook);
-  const [selectedChapter, setSelectedChapter] = useState<Chapter>(initial.initialChapter);
-  const [provider, setProvider] = useState<Provider>("email");
-  const [payment, setPayment] = useState<PaymentMethod>("card");
-  const [signedUp, setSignedUp] = useState(false);
-  const [fontSize, setFontSize] = useState(18);
-  const [theme, setTheme] = useState<ReaderTheme>("paper");
-  const [bookmarked, setBookmarked] = useState(false);
-  const [highlighted, setHighlighted] = useState(false);
-  const [note, setNote] = useState("");
-  const [topicStatus, setTopicStatus] = useState<Record<string, "Not started" | "In progress" | "Done">>({});
-
-  const updateQuery = (value: string) => {
-    setQuery(value);
-    const next = resultsFor(value).books[0] ?? initial.initialBook;
-    const chapter = next?.chapters[0];
-    if (next && chapter) {
-      setSelectedBook(next);
-      setSelectedChapter(chapter);
-    }
+const schema = z.object({
+  query: z.string(), examDate: z.string(), topics: z.array(z.string()), plan: z.array(z.string()), bookId: z.string(), chapterNumber: z.number(),
+  provider: z.enum(['email','unidays','google','apple']), payment: z.enum(['card','google','apple']), signedUp: z.boolean(),
+  fontSize: z.number().min(15).max(24), theme: z.enum(['paper','sepia','ink']),
+  chapters: z.record(z.string(), z.object({ bookmarked: z.boolean(), highlighted: z.boolean(), note: z.string(), position: z.number().min(0), status: z.enum(['Not started','In progress','Done']) })),
+  name: z.string(), email: z.string(), course: z.string(),
+});
+type State = z.infer<typeof schema>;
+const first = resultSets[0]?.books[0];
+if (!first?.chapters[0]) throw new Error('Missing mock data');
+const initial: State = { query: '', examDate: '', topics: [], plan: [], bookId: first.id, chapterNumber: first.chapters[0].number, provider:'email', payment:'card', signedUp:false, fontSize:18, theme:'paper', chapters:{}, name:'', email:'', course:'' };
+const emptyChapter = { bookmarked:false, highlighted:false, note:'', position:0, status:'Not started' as const };
+function useStateModel() {
+  const [state,setState] = useState<State>(initial);
+  const [hydrated,setHydrated] = useState(false);
+  useEffect(() => { try { const raw = localStorage.getItem('perlego-sprint-v1'); if(raw) { const parsed = schema.safeParse(JSON.parse(raw)); if(parsed.success) setState(parsed.data); } } catch {} setHydrated(true); },[]);
+  useEffect(() => { if(hydrated) { try { localStorage.setItem('perlego-sprint-v1',JSON.stringify(state)); } catch {} } },[state,hydrated]);
+  const patch = (value: Partial<State>) => setState(s=>({...s,...value}));
+  const selectedBook = resultSets.flatMap(s=>s.books).find(b=>b.id===state.bookId) ?? first as Book;
+  const selectedChapter = selectedBook.chapters.find(c=>c.number===state.chapterNumber) ?? selectedBook.chapters[0] as Chapter;
+  const key = `${selectedBook.id}:${selectedChapter.number}`;
+  const chapterState = state.chapters[key] ?? emptyChapter;
+  const patchChapter = (value: Partial<typeof chapterState>) => setState(s=>({...s,chapters:{...s.chapters,[key]:{...(s.chapters[key]??emptyChapter),...value}}}));
+  const selectBook = (book:Book, chapter=book.chapters[0]) => { if(chapter) patch({bookId:book.id,chapterNumber:chapter.number}); };
+  const addBook = (book:Book) => setState(s=>({...s,plan:s.plan.includes(book.id)?s.plan:[...s.plan,book.id]}));
+  const setQuery = (query:string) => setState(s=> query===s.query?s:{...s,query,topics:[],plan:[],bookId:resultsFor(query).books[0]?.id??s.bookId});
+  const setTopics = (topics:string[]) => patch({topics,plan:[]});
+  return { ...state, hydrated, patch, setQuery, setTopics, selectedBook, selectedChapter, selectBook, addBook,
+    toggleBook:(book:Book)=>setState(s=>({...s,plan:s.plan.includes(book.id)?s.plan.filter(id=>id!==book.id):[...s.plan,book.id]})),
+    setProvider:(provider:State['provider'])=>patch({provider}), setPayment:(payment:State['payment'])=>patch({payment}), setSignedUp:(signedUp:boolean)=>patch({signedUp}),
+    setFontSize:(fontSize:number)=>patch({fontSize}),setTheme:(theme:State['theme'])=>patch({theme}),
+    ...chapterState, setBookmarked:(bookmarked:boolean)=>patchChapter({bookmarked}),setHighlighted:(highlighted:boolean)=>patchChapter({highlighted}),setNote:(note:string)=>patchChapter({note}),
+    setPosition:(position:number)=>patchChapter({position}), startSession:()=>patchChapter({status:chapterState.status==='Done'?'Done':'In progress'}), completeChapter:()=>patchChapter({status:'Done'}),
   };
-  const selectBook = (book: Book, chapter = book.chapters[0]) => {
-    if (!chapter) return;
-    setSelectedBook(book);
-    setSelectedChapter(chapter);
-  };
-  const cycleTopic = (topic: string) => setTopicStatus((current) => {
-    const status = current[topic] ?? "Not started";
-    return { ...current, [topic]: status === "Not started" ? "In progress" : status === "In progress" ? "Done" : "Not started" };
-  });
-
-  return <OnboardingContext.Provider value={{ query, setQuery: updateQuery, selectedBook, selectedChapter, selectBook, provider, setProvider, payment, setPayment, signedUp, setSignedUp, fontSize, setFontSize, theme, setTheme, bookmarked, setBookmarked, highlighted, setHighlighted, note, setNote, topicStatus, cycleTopic }}>{children}</OnboardingContext.Provider>;
 }
-
-export function useOnboarding() {
-  const value = useContext(OnboardingContext);
-  if (!value) throw new Error("useOnboarding must be used within OnboardingProvider");
-  return value;
-}
+const Context = createContext<ReturnType<typeof useStateModel>|null>(null);
+export function OnboardingProvider({children}:{children:ReactNode}) { const value=useStateModel(); return <Context.Provider value={value}>{children}</Context.Provider>; }
+export function useOnboarding(){const value=useContext(Context);if(!value)throw new Error('Missing onboarding provider');return value;}
