@@ -48,14 +48,30 @@ function Cover({ book, small = false }: { book: Book; small?: boolean }) {
 }
 
 export function ResultsPage() {
-  const { query, topics, selectBook, toggleBook, plan } = useOnboarding();
+  const { query, setQuery, topics, setTopics, selectBook, toggleBook, plan } = useOnboarding();
   const books = matchingBooks(query, topics);
+  const [value, setValue] = useState(query);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   useEffect(() => { const timer = window.setTimeout(() => setLoading(false), 1500); return () => window.clearTimeout(timer); }, [query]);
+  const research = (event: FormEvent) => {
+    event.preventDefault();
+    const next = value.trim();
+    if (!next) return;
+    setValue(next);
+    setQuery(next);
+    setTopics(resultsFor(next).books[0]?.topics.map((t) => t.label) ?? []);
+  };
   const choose = (book: Book, chapter?: Book["chapters"][number]) => { selectBook(book, chapter ?? book.chapters[0]); navigate({ to: "/preview" }); };
   return <main className="min-h-screen bg-paper"><Header back="/" /><section className="mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8">
-    <p className="text-sm font-semibold text-primary">Your study matches for “{query}”</p><h1 className="mt-2 max-w-4xl font-display text-4xl sm:text-5xl">The fastest route through “{query}”</h1>
+    <p className="text-sm font-semibold text-primary">Your study matches</p>
+    <form onSubmit={research} className="mt-3 flex w-full max-w-3xl items-center gap-2 rounded-lg border border-input bg-background p-2 shadow-warm focus-within:ring-4 focus-within:ring-ring">
+      <Search className="ml-3 shrink-0 text-muted-foreground" size={22} />
+      <label className="sr-only" htmlFor="results-search">Your search</label>
+      <input id="results-search" value={value} onChange={(e) => setValue(e.target.value)} className="min-w-0 flex-1 bg-transparent px-2 py-2 font-display text-2xl leading-tight text-foreground outline-none sm:text-4xl" aria-label="Your search query" />
+      <Button type="submit" className="hidden shrink-0 sm:inline-flex">Search again <ArrowRight size={18} /></Button>
+      <Button type="submit" size="icon" aria-label="Search again" className="shrink-0 sm:hidden"><ArrowRight size={18} /></Button>
+    </form>
     {loading ? <LoadingResults /> : <><div className="mt-7 flex items-start gap-3 border-y border-border py-5 text-base"><Sparkles className="mt-0.5 shrink-0 text-primary" size={20}/><p>3 sample books, matched to {topics.length} selected topics. {books[0]?.match ? "Start with #1 for the closest match." : "No matching chapters yet — try adjusting your topics."} <Link to="/topics" search={{edit:true}} className="underline">Edit topics</Link></p></div>
     <div className="mt-7 grid gap-5">{books.map((book, index) => <article key={book.id} className="result-card grid gap-6 rounded-lg border border-border bg-background p-5 transition hover:-translate-y-0.5 hover:shadow-warm-lg sm:grid-cols-[128px_1fr_auto] sm:p-6">
       <button type="button" onClick={() => choose(book)} aria-label={`Open ${book.title} at chapter one`} className="cursor-pointer text-left transition hover:opacity-80"><Cover book={book}/></button><div className="min-w-0 cursor-pointer" onClick={() => choose(book)}><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-primary-soft px-2.5 py-1 text-xs font-bold text-primary">{book.match}% match</span>{index === 0 && <span className="rounded-full bg-success-soft px-2.5 py-1 text-xs font-bold text-success">Best place to start</span>}</div><h2 className="mt-3 font-ui text-xl font-bold">{book.title}</h2><p className="mt-1 text-sm text-muted-foreground">{book.author} · {book.edition}</p>
