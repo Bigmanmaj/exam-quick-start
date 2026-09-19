@@ -53,7 +53,10 @@ export const resultSets: ResultSet[] = [
 
 export const examples = resultSets.map(({ prompt }) => prompt);
 
-export function resultsFor(query: string) {
+export function resultsFor(query: string): ResultSet {
   const q = query.toLowerCase();
-  return resultSets.find((set) => set.prompt.toLowerCase() === q || q.includes(set.id) || (set.id === "law" && q.includes("contract")) || (set.id === "economics" && (q.includes("supply") || q.includes("market")))) ?? resultSets[0];
+  const matched = resultSets.find((set) => set.prompt.toLowerCase() === q || q.includes(set.id) || (set.id === "law" && q.includes("contract")) || (set.id === "economics" && (q.includes("supply") || q.includes("market"))));
+  const fallback = resultSets[0];
+  if (!fallback) throw new Error("Mock result data is incomplete");
+  return matched ?? fallback;
 }
