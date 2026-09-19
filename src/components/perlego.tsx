@@ -19,10 +19,11 @@ export function Header({ back }: { back?: "/" | "/results" | "/study" | "/topics
 }
 
 export function SearchHome() {
-  const { query, setQuery } = useOnboarding();
+  const { query, setQuery, setTopics } = useOnboarding();
   const [value, setValue] = useState(query);
   const navigate = useNavigate();
-  const submit = (event?: FormEvent) => { event?.preventDefault(); if (!value.trim()) return; setQuery(value.trim()); navigate({ to: "/topics" }); };
+  const start = (q: string) => { setQuery(q); setTopics(resultsFor(q).books[0]?.topics.map((t) => t.label) ?? []); navigate({ to: "/results" }); };
+  const submit = (event?: FormEvent) => { event?.preventDefault(); if (!value.trim()) return; start(value.trim()); };
   return <main className="min-h-screen bg-paper">
     <Header />
     <section className="mx-auto flex min-h-[calc(100vh-72px)] max-w-5xl flex-col items-center px-5 pt-[11vh] text-center sm:px-8">
@@ -36,7 +37,7 @@ export function SearchHome() {
         <Button type="submit" size="lg" className="hidden sm:inline-flex">Find my chapters <ArrowRight size={18} /></Button>
         <Button type="submit" size="icon" aria-label="Find my chapters" className="sm:hidden"><ArrowRight size={18} /></Button>
       </form>
-      <div className="mt-7 flex max-w-4xl flex-wrap justify-center gap-2.5">{examples.map((example) => <button key={example} onClick={() => { setValue(example); setQuery(example); navigate({ to: "/topics" }); }} className="rounded-full border border-border bg-background px-4 py-2.5 text-left text-sm text-secondary-foreground transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring">{example}</button>)}</div>
+      <div className="mt-7 flex max-w-4xl flex-wrap justify-center gap-2.5">{examples.map((example) => <button key={example} onClick={() => { setValue(example); start(example); }} className="rounded-full border border-border bg-background px-4 py-2.5 text-left text-sm text-secondary-foreground transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring">{example}</button>)}</div>
       <p className="mt-10 flex items-center gap-2 text-sm text-muted-foreground"><Check size={16} className="text-success" /> No account needed to see your matches</p>
     </section>
   </main>;
@@ -53,7 +54,7 @@ export function ResultsPage() {
   const navigate = useNavigate();
   useEffect(() => { const timer = window.setTimeout(() => setLoading(false), 1500); return () => window.clearTimeout(timer); }, [query]);
   const choose = (book: Book, chapter?: Book["chapters"][number]) => { selectBook(book, chapter ?? book.chapters[0]); navigate({ to: "/preview" }); };
-  return <main className="min-h-screen bg-paper"><Header back="/topics" /><section className="mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8">
+  return <main className="min-h-screen bg-paper"><Header back="/" /><section className="mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8">
     <p className="text-sm font-semibold text-primary">Your study matches</p><h1 className="mt-2 max-w-4xl font-display text-4xl sm:text-5xl">The fastest route through “{query}”</h1>
     {loading ? <LoadingResults /> : <><div className="mt-7 flex items-start gap-3 border-y border-border py-5 text-base"><Sparkles className="mt-0.5 shrink-0 text-primary" size={20}/><p>3 sample books, matched to {topics.length} selected topics. {books[0]?.match ? "Start with #1 for the closest match." : "No matching chapters yet — try adjusting your topics."} <Link to="/topics" search={{edit:true}} className="underline">Edit topics</Link></p></div>
     <div className="mt-7 grid gap-5">{books.map((book, index) => <article key={book.id} className="result-card grid gap-6 rounded-lg border border-border bg-background p-5 transition hover:-translate-y-0.5 hover:shadow-warm-lg sm:grid-cols-[128px_1fr_auto] sm:p-6">
