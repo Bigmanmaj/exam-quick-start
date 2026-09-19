@@ -105,10 +105,15 @@ export function DashboardPage() {
 
       {s.topics.length > 1 && <section className="mt-12"><h2 className="font-ui text-2xl font-bold">Topic coverage</h2><div className="mt-4 divide-y divide-border border-y border-border">{s.topics.map((topic) => { const linked = sessions.filter((x) => chapterTopics(x.book, x.chapter).includes(topic)); const status = linked.length && linked.every((x) => s.chapters[x.key]?.status === 'Done') ? 'Done' : linked.some((x) => s.chapters[x.key]?.status) ? 'In progress' : 'Not started'; return <div key={topic} className="flex flex-wrap items-center justify-between gap-3 py-4"><div><p className="font-semibold">{topic}</p><p className="mt-1 text-sm text-muted-foreground">{linked.length ? linked.map((x) => `${x.book.title}, Ch. ${x.chapter.number}`).join(' · ') : 'No matching chapter on your shelf'}</p></div><span className="text-sm text-muted-foreground">{linked.length ? status : 'Not covered'}</span></div>; })}</div></section>}
 
-      <section className="mt-12 grid gap-5 lg:grid-cols-2">
+      {guest ? <section className="mt-12 rounded-lg border border-border bg-background p-6 sm:p-8">
+        <h2 className="font-ui text-2xl font-bold">Sign up to save revision plan</h2>
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">Keep this plan, your notes and your place in every chapter. Sign up with UniDays, Google or Apple in one screen — it's a demo, so nothing is charged.</p>
+        <ul className="mt-5 grid gap-3 text-sm sm:grid-cols-3">{['Save your reading list and progress', 'Full chapter access, not just the first page', 'Recommendations matched to your topics'].map((x) => <li key={x} className="rounded-lg border border-border bg-paper p-4">{x}</li>)}</ul>
+        <div className="mt-6 flex flex-wrap gap-2"><Button onClick={() => navigate({ to: '/signup' })}>Sign up to save plan <ArrowRight size={17} /></Button><Button variant="ghost" onClick={() => navigate({ to: '/login' })}>Log in instead</Button></div>
+      </section> : <section className="mt-12 grid gap-5 lg:grid-cols-2">
         <article className="rounded-lg border border-border bg-background p-6"><h2 className="font-ui text-2xl font-bold">Account details</h2><dl className="mt-5 grid gap-4 text-sm">{[['Name', s.name || 'Not provided'], ['Email', s.email || 'Not provided'], ['University course', s.course || 'Not provided'], ['Signed in with', providerLabel[s.provider]], ['Payment method', paymentLabel[s.payment]]].map(([label, detail]) => <div key={label} className="flex flex-wrap justify-between gap-2 border-b border-border pb-3"><dt className="text-muted-foreground">{label}</dt><dd className="font-semibold">{detail}</dd></div>)}</dl></article>
         <article className="rounded-lg border border-border bg-background p-6"><h2 className="font-ui text-2xl font-bold">Your plan</h2><p className="mt-3 text-sm text-muted-foreground">Demo student plan — 14 days free, then £12 per month (placeholder). No real charge was made.</p><ul className="mt-5 grid gap-3 text-sm">{['Full chapter access', 'Notes, highlights and bookmarks', 'Recommendations matched to your topics'].map((x) => <li key={x} className="border-b border-border pb-3">{x}</li>)}</ul><p className="mt-5 text-sm text-muted-foreground">Need something else? <Link to="/results" className="underline">Run a new search</Link>.</p></article>
-      </section>
+      </section>}
     </section>
   </main>;
 }
