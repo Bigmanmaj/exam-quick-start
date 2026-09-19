@@ -29,7 +29,8 @@ export function DashboardPage() {
   const done = sessions.filter((x) => s.chapters[x.key]?.status === 'Done').length;
   const readingList = s.reading.flatMap((key) => { const found = findChapterByKey(key); return found ? [{ key, ...found }] : []; });
   const readingMinutes = readingList.reduce((n, x) => n + x.chapter.minutes, 0);
-  const open = (book: Book, chapter?: Book['chapters'][number]) => { s.selectBook(book, chapter ?? matchedChapters(book, s.topics)[0] ?? book.chapters[0]); navigate({ to: '/reader' }); };
+  const guest = !s.signedUp;
+  const open = (book: Book, chapter?: Book['chapters'][number]) => { s.selectBook(book, chapter ?? matchedChapters(book, s.topics)[0] ?? book.chapters[0]); navigate({ to: guest ? '/preview' : '/reader' }); };
   const research = (event: FormEvent) => { event.preventDefault(); const next = value.trim(); if (!next) return; s.setQuery(next); s.setTopics(resultsFor(next).books[0]?.topics.map((t) => t.label) ?? []); navigate({ to: '/results' }); };
   const signOut = () => { s.setSignedUp(false); navigate({ to: '/' }); };
 
@@ -41,13 +42,21 @@ export function DashboardPage() {
         <input id="dashboard-search" value={value} onChange={(e) => setValue(e.target.value)} placeholder="Search a module, topic or textbook" className="min-w-0 flex-1 bg-transparent px-1 py-1.5 outline-none" />
         <Button type="submit" size="sm">Search</Button>
       </form>
-      <div className="flex items-center gap-2"><span className="grid size-10 place-items-center rounded-full bg-primary font-ui text-sm font-extrabold text-primary-foreground" aria-hidden="true">{(s.name.trim() || 'Student').split(' ').map((p) => p[0]).slice(0, 2).join('')}</span><Button variant="ghost" onClick={signOut}>Log out <LogOut size={16} /></Button></div>
+      {guest
+        ? <div className="flex items-center gap-2"><Button variant="ghost" onClick={() => navigate({ to: '/login' })}>Log in</Button><Button onClick={() => navigate({ to: '/signup' })}>Sign up</Button></div>
+        : <div className="flex items-center gap-2"><span className="grid size-10 place-items-center rounded-full bg-primary font-ui text-sm font-extrabold text-primary-foreground" aria-hidden="true">{(s.name.trim() || 'Student').split(' ').map((p) => p[0]).slice(0, 2).join('')}</span><Button variant="ghost" onClick={signOut}>Log out <LogOut size={16} /></Button></div>}
     </div></header>
 
     <section className="mx-auto max-w-7xl px-5 pb-20 pt-9 sm:px-8">
-      <p className="text-sm font-semibold text-primary">Welcome to Perlego</p>
-      <h1 className="mt-2 font-display text-4xl sm:text-5xl">Good to see you, {firstName}.</h1>
-      <p className="mt-3 max-w-2xl text-muted-foreground">Your student plan is active. Here's everything matched to “{s.query || 'your last search'}”.</p>
+      <p className="text-sm font-semibold text-primary">{guest ? 'Sample revision plan' : 'Welcome to Perlego'}</p>
+      <h1 className="mt-2 font-display text-4xl sm:text-5xl">{guest ? 'Here’s your revision plan.' : `Good to see you, ${firstName}.`}</h1>
+      <p className="mt-3 max-w-2xl text-muted-foreground">{guest ? `A sample plan built from “${s.query || 'your last search'}”. Preview the first page of any chapter, then sign up to keep it.` : `Your student plan is active. Here's everything matched to “${s.query || 'your last search'}”.`}</p>
+
+      {guest && <section className="mt-7 flex flex-wrap items-center justify-between gap-5 rounded-lg border border-primary/30 bg-primary-soft p-6">
+        <div><h2 className="font-ui text-xl font-bold">Sign up to save your revision plan</h2>
+          <p className="mt-2 max-w-xl text-sm text-muted-foreground">Your {readingList.length || 'saved'} {readingList.length === 1 ? 'chapter' : 'chapters'} and progress stay on this device only. Create a free demo account to keep them and unlock full chapters.</p></div>
+        <div className="flex flex-wrap gap-2"><Button onClick={() => navigate({ to: '/signup' })}>Sign up to save plan <ArrowRight size={17} /></Button><Button variant="outline" onClick={() => navigate({ to: '/login' })}>I already have an account</Button></div>
+      </section>}
 
       <section className="mt-8 rounded-lg border border-border bg-background p-6 shadow-warm-lg sm:p-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
@@ -96,10 +105,15 @@ export function DashboardPage() {
 
       {s.topics.length > 1 && <section className="mt-12"><h2 className="font-ui text-2xl font-bold">Topic coverage</h2><div className="mt-4 divide-y divide-border border-y border-border">{s.topics.map((topic) => { const linked = sessions.filter((x) => chapterTopics(x.book, x.chapter).includes(topic)); const status = linked.length && linked.every((x) => s.chapters[x.key]?.status === 'Done') ? 'Done' : linked.some((x) => s.chapters[x.key]?.status) ? 'In progress' : 'Not started'; return <div key={topic} className="flex flex-wrap items-center justify-between gap-3 py-4"><div><p className="font-semibold">{topic}</p><p className="mt-1 text-sm text-muted-foreground">{linked.length ? linked.map((x) => `${x.book.title}, Ch. ${x.chapter.number}`).join(' · ') : 'No matching chapter on your shelf'}</p></div><span className="text-sm text-muted-foreground">{linked.length ? status : 'Not covered'}</span></div>; })}</div></section>}
 
-      <section className="mt-12 grid gap-5 lg:grid-cols-2">
+      {guest ? <section className="mt-12 rounded-lg border border-border bg-background p-6 sm:p-8">
+        <h2 className="font-ui text-2xl font-bold">Sign up to save revision plan</h2>
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">Keep this plan, your notes and your place in every chapter. Sign up with UniDays, Google or Apple in one screen — it's a demo, so nothing is charged.</p>
+        <ul className="mt-5 grid gap-3 text-sm sm:grid-cols-3">{['Save your reading list and progress', 'Full chapter access, not just the first page', 'Recommendations matched to your topics'].map((x) => <li key={x} className="rounded-lg border border-border bg-paper p-4">{x}</li>)}</ul>
+        <div className="mt-6 flex flex-wrap gap-2"><Button onClick={() => navigate({ to: '/signup' })}>Sign up to save plan <ArrowRight size={17} /></Button><Button variant="ghost" onClick={() => navigate({ to: '/login' })}>Log in instead</Button></div>
+      </section> : <section className="mt-12 grid gap-5 lg:grid-cols-2">
         <article className="rounded-lg border border-border bg-background p-6"><h2 className="font-ui text-2xl font-bold">Account details</h2><dl className="mt-5 grid gap-4 text-sm">{[['Name', s.name || 'Not provided'], ['Email', s.email || 'Not provided'], ['University course', s.course || 'Not provided'], ['Signed in with', providerLabel[s.provider]], ['Payment method', paymentLabel[s.payment]]].map(([label, detail]) => <div key={label} className="flex flex-wrap justify-between gap-2 border-b border-border pb-3"><dt className="text-muted-foreground">{label}</dt><dd className="font-semibold">{detail}</dd></div>)}</dl></article>
         <article className="rounded-lg border border-border bg-background p-6"><h2 className="font-ui text-2xl font-bold">Your plan</h2><p className="mt-3 text-sm text-muted-foreground">Demo student plan — 14 days free, then £12 per month (placeholder). No real charge was made.</p><ul className="mt-5 grid gap-3 text-sm">{['Full chapter access', 'Notes, highlights and bookmarks', 'Recommendations matched to your topics'].map((x) => <li key={x} className="border-b border-border pb-3">{x}</li>)}</ul><p className="mt-5 text-sm text-muted-foreground">Need something else? <Link to="/results" className="underline">Run a new search</Link>.</p></article>
-      </section>
+      </section>}
     </section>
   </main>;
 }

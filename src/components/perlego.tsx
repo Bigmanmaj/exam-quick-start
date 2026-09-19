@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, Bookmark, Check, CheckCircle2, ChevronDown, Cloc
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { examples, resultsFor, matchingBooks, type Book } from "@/lib/mock-data";
+import { examples, resultsFor, matchingBooks, matchedChapters, type Book } from "@/lib/mock-data";
 import { useOnboarding } from "@/lib/onboarding-context";
 
 export function Logo() {
@@ -108,7 +108,7 @@ function Cover({ book, small = false }: { book: Book; small?: boolean }) {
 }
 
 export function ResultsPage() {
-  const { query, setQuery, topics, setTopics, selectBook, toggleBook, plan, isReading, toggleReading } = useOnboarding();
+  const { query, setQuery, topics, setTopics, selectBook, toggleBook, addBook, addReading, plan, isReading, toggleReading } = useOnboarding();
   const books = matchingBooks(query, topics);
   const [value, setValue] = useState(query);
   const [loading, setLoading] = useState(true);
@@ -123,6 +123,14 @@ export function ResultsPage() {
     setTopics(resultsFor(next).books[0]?.topics.map((t) => t.label) ?? []);
   };
   const choose = (book: Book, chapter?: Book["chapters"][number]) => { selectBook(book, chapter ?? book.chapters[0]); navigate({ to: "/preview" }); };
+  const addToPlan = (book: Book) => {
+    if (plan.includes(book.id)) { toggleBook(book); return; }
+    addBook(book);
+    const chapters = matchedChapters(book, topics);
+    (chapters.length ? chapters : book.chapters).forEach((chapter) => addReading(book, chapter));
+    selectBook(book, chapters[0] ?? book.chapters[0]);
+    navigate({ to: "/study" });
+  };
   return <main className="min-h-screen bg-paper"><Header back="/" /><section className="mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8">
     <p className="text-sm font-semibold text-primary">Your study matches</p>
     <form onSubmit={research} className="mt-3 flex w-full max-w-3xl items-center gap-2 rounded-lg border border-input bg-background p-2 shadow-warm focus-within:ring-4 focus-within:ring-ring">
@@ -141,7 +149,7 @@ export function ResultsPage() {
           <button type="button" onClick={(e) => { e.stopPropagation(); toggleReading(book, chapter); }} aria-label={`${isReading(book, chapter) ? "Remove chapter" : "Add chapter"} ${chapter.number} of ${book.title} ${isReading(book, chapter) ? "from" : "to"} your reading list`} className="flex items-center gap-1 rounded-full border border-border px-2 py-1 text-xs font-semibold transition hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{isReading(book, chapter) ? <><Check size={13} /> Saved</> : <><Plus size={13} /> Add</>}</button></span>
       </div>)}</div>
       <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Topics covered</p><div className="mt-2 flex flex-wrap gap-2">{book.topics.map((topic) => <span key={topic.label} className={cn("rounded-full px-2.5 py-1 text-xs font-medium", topic.covered ? "bg-success-soft text-success" : "bg-muted text-muted-foreground")}><span aria-hidden="true">{topic.covered ? "✓" : "×"}</span> {topic.label}</span>)}</div></div>
-      <div className="flex min-w-44 flex-col justify-between gap-5 border-t border-border pt-5 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0"><p className="flex items-center gap-2 text-sm text-muted-foreground"><Clock3 size={17}/> {book.chapters.reduce((n, c) => n + c.minutes, 0)} min reading</p><div className="grid gap-2"><Button disabled={!book.chapters.length} onClick={() => choose(book)}>Preview chapter <ArrowRight size={17}/></Button><Button variant="outline" disabled={!book.chapters.length} onClick={() => toggleBook(book)}>{plan.includes(book.id) ? "Remove from plan" : "Add to revision plan"}</Button></div></div>
+      <div className="flex min-w-44 flex-col justify-between gap-5 border-t border-border pt-5 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0"><p className="flex items-center gap-2 text-sm text-muted-foreground"><Clock3 size={17}/> {book.chapters.reduce((n, c) => n + c.minutes, 0)} min reading</p><div className="grid gap-2"><Button disabled={!book.chapters.length} onClick={() => choose(book)}>Preview chapter <ArrowRight size={17}/></Button><Button variant="outline" disabled={!book.chapters.length} onClick={() => addToPlan(book)}>{plan.includes(book.id) ? "Remove from plan" : "Add to revision plan"}</Button></div></div>
     </article>)}</div></>}
   </section></main>;
 }
