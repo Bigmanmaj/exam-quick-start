@@ -1,10 +1,10 @@
 import { useNavigate, Link } from '@tanstack/react-router';
-import { ArrowRight, BookOpen, Clock3, LogOut, Search, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, Check, Clock3, ListChecks, LogOut, Plus, Search, Sparkles, X } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Logo } from './perlego';
 import { useOnboarding } from '@/lib/onboarding-context';
-import { chapterTopics, matchedChapters, matchingBooks, resultSets, resultsFor, type Book } from '@/lib/mock-data';
+import { chapterTopics, findChapterByKey, matchedChapters, matchingBooks, resultSets, resultsFor, type Book } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
 
 const providerLabel = { email: 'Email', unidays: 'UniDays', google: 'Google', apple: 'Apple' } as const;
@@ -27,6 +27,8 @@ export function DashboardPage() {
   const sessions = shelf.flatMap((book) => matchedChapters(book, s.topics).map((chapter) => ({ book, chapter, key: `${book.id}:${chapter.number}` })));
   const minutes = sessions.reduce((n, x) => n + x.chapter.minutes, 0);
   const done = sessions.filter((x) => s.chapters[x.key]?.status === 'Done').length;
+  const readingList = s.reading.flatMap((key) => { const found = findChapterByKey(key); return found ? [{ key, ...found }] : []; });
+  const readingMinutes = readingList.reduce((n, x) => n + x.chapter.minutes, 0);
   const open = (book: Book, chapter?: Book['chapters'][number]) => { s.selectBook(book, chapter ?? matchedChapters(book, s.topics)[0] ?? book.chapters[0]); navigate({ to: '/reader' }); };
   const research = (event: FormEvent) => { event.preventDefault(); const next = value.trim(); if (!next) return; s.setQuery(next); s.setTopics(resultsFor(next).books[0]?.topics.map((t) => t.label) ?? []); navigate({ to: '/results' }); };
   const signOut = () => { s.setSignedUp(false); navigate({ to: '/' }); };
@@ -47,6 +49,23 @@ export function DashboardPage() {
       <h1 className="mt-2 font-display text-4xl sm:text-5xl">Good to see you, {firstName}.</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">Your student plan is active. Here's everything matched to “{s.query || 'your last search'}”.</p>
 
+      <section className="mt-8 rounded-lg border border-border bg-background p-6 shadow-warm-lg sm:p-8">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div><p className="flex items-center gap-2 text-sm font-semibold text-primary"><ListChecks size={16} /> Your reading list</p>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">{readingList.length ? `${readingList.length} ${readingList.length === 1 ? 'chapter' : 'chapters'} lined up` : 'No chapters saved yet'}</h2>
+            <p className="mt-2 text-muted-foreground">{readingList.length ? `About ${readingMinutes} min of focused reading in total.` : 'Add chapters from your search results or the recommendations below.'}</p></div>
+          {readingList.length ? <Button onClick={() => { const next = readingList.find((x) => s.chapters[x.key]?.status !== 'Done') ?? readingList[0]; if (next) open(next.book, next.chapter); }}>Continue reading <ArrowRight size={17} /></Button> : <Button onClick={() => navigate({ to: '/results' })}>Find chapters <Search size={17} /></Button>}
+        </div>
+        {readingList.length ? <ul className="mt-6 divide-y divide-border border-t border-border">{readingList.map(({ key, book, chapter }) => <li key={key} className="flex flex-wrap items-center gap-4 py-4">
+          <div className="min-w-0 flex-1"><p className="font-ui text-lg font-bold"><strong className="font-bold">Chapter {chapter.number}</strong> · {chapter.title}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{book.title} · {book.author}</p></div>
+          <span className="flex items-center gap-2 text-sm text-muted-foreground"><Clock3 size={16} /> {chapter.minutes} min read</span>
+          <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">{s.chapters[key]?.status ?? 'Not started'}</span>
+          <div className="flex gap-2"><Button size="sm" onClick={() => open(book, chapter)}>Read</Button>
+            <Button size="sm" variant="ghost" aria-label={`Remove chapter ${chapter.number} of ${book.title} from your reading list`} onClick={() => s.removeReading(key)}>Remove <X size={15} /></Button></div>
+        </li>)}</ul> : null}
+      </section>
+
       <div className="mt-8 grid gap-4 border-y border-border py-7 sm:grid-cols-3">
         <div><p className="text-sm text-muted-foreground">Bookshelf</p><p className="mt-2 font-display text-3xl">{shelf.length} {shelf.length === 1 ? 'book' : 'books'}</p></div>
         <div><p className="text-sm text-muted-foreground">Relevant reading</p><p className="mt-2 font-display text-3xl">{minutes} min</p></div>
@@ -58,7 +77,10 @@ export function DashboardPage() {
         <div className="mt-5 grid gap-5 sm:grid-cols-3">{recommendations.map((book) => <article key={book.id} className="flex flex-col rounded-lg border border-border bg-background p-5 shadow-warm transition hover:-translate-y-0.5 hover:shadow-warm-lg">
           <div className="flex gap-4"><Spine book={book} /><div className="min-w-0"><span className="rounded-full bg-primary-soft px-2.5 py-1 text-xs font-bold text-primary">{book.match}% match</span><h3 className="mt-3 font-ui text-lg font-bold">{book.title}</h3><p className="mt-1 text-sm text-muted-foreground">{book.author}</p></div></div>
           <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground"><Clock3 size={16} /> {book.chapters.reduce((n, c) => n + c.minutes, 0)} min of relevant chapters</p>
-          <div className="mt-4 grid gap-2">{book.chapters.map((chapter) => <button type="button" key={chapter.number} onClick={() => open(book, chapter)} className="text-left text-sm transition hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><strong>Chapter {chapter.number}</strong> · {chapter.title}</button>)}</div>
+          <div className="mt-4 grid gap-2">{book.chapters.map((chapter) => <div key={chapter.number} className="flex items-start justify-between gap-2 text-sm">
+            <button type="button" onClick={() => open(book, chapter)} className="min-w-0 text-left transition hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><strong>Chapter {chapter.number}</strong> · {chapter.title} <span className="text-muted-foreground">({chapter.minutes} min)</span></button>
+            <button type="button" onClick={() => s.toggleReading(book, chapter)} aria-label={`${s.isReading(book, chapter) ? 'Remove chapter' : 'Add chapter'} ${chapter.number} of ${book.title} ${s.isReading(book, chapter) ? 'from' : 'to'} your reading list`} className="flex shrink-0 items-center gap-1 rounded-full border border-border px-2 py-1 text-xs font-semibold transition hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{s.isReading(book, chapter) ? <><Check size={13} /> Saved</> : <><Plus size={13} /> Add</>}</button>
+          </div>)}</div>
           <div className="mt-5 grid gap-2"><Button disabled={!book.chapters.length} onClick={() => open(book)}>Start reading <ArrowRight size={17} /></Button><Button variant="outline" onClick={() => s.toggleBook(book)}>{s.plan.includes(book.id) ? 'Remove from bookshelf' : 'Add to bookshelf'}</Button></div>
         </article>)}</div>
       </section>

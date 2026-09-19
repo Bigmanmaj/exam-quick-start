@@ -73,6 +73,12 @@ const mappings: Record<string, Record<number, string[]>> = {
  'eco-3': {3:['Supply and demand'],8:['Market failure']},
 };
 export function chapterTopics(book: Book, chapter: Chapter) { return mappings[book.id]?.[chapter.number] ?? []; }
+export function findChapterByKey(key: string) {
+  const [bookId, number] = key.split(':');
+  const book = resultSets.flatMap(s=>s.books).find(b=>b.id===bookId);
+  const chapter = book?.chapters.find(c=>c.number===Number(number));
+  return book && chapter ? { book, chapter } : null;
+}
 export function matchedChapters(book: Book, topics: string[]) { return book.chapters.filter(c=>chapterTopics(book,c).some(t=>topics.includes(t))); }
 export function matchingBooks(query: string, topics: string[]) {
  return resultsFor(query).books.map(book=>{

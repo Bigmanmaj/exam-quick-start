@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { resultSets, resultsFor, type Book, type Chapter } from './mock-data';
 
 const schema = z.object({
-  query: z.string(), examDate: z.string(), topics: z.array(z.string()), plan: z.array(z.string()), bookId: z.string(), chapterNumber: z.number(),
+  query: z.string(), examDate: z.string(), topics: z.array(z.string()), plan: z.array(z.string()), reading: z.array(z.string()).default([]), bookId: z.string(), chapterNumber: z.number(),
   provider: z.enum(['email','unidays','google','apple']), payment: z.enum(['card','google','apple']), signedUp: z.boolean(),
   fontSize: z.number().min(15).max(24), theme: z.enum(['paper','sepia','ink']),
   chapters: z.record(z.string(), z.object({ bookmarked: z.boolean(), highlighted: z.boolean(), note: z.string(), position: z.number().min(0), status: z.enum(['Not started','In progress','Done']) })),
@@ -12,7 +12,7 @@ const schema = z.object({
 type State = z.infer<typeof schema>;
 const first = resultSets[0]?.books[0];
 if (!first?.chapters[0]) throw new Error('Missing mock data');
-const initial: State = { query: '', examDate: '', topics: [], plan: [], bookId: first.id, chapterNumber: first.chapters[0].number, provider:'email', payment:'card', signedUp:false, fontSize:18, theme:'paper', chapters:{}, name:'', email:'', course:'' };
+const initial: State = { query: '', examDate: '', topics: [], plan: [], reading: [], bookId: first.id, chapterNumber: first.chapters[0].number, provider:'email', payment:'card', signedUp:false, fontSize:18, theme:'paper', chapters:{}, name:'', email:'', course:'' };
 const emptyChapter = { bookmarked:false, highlighted:false, note:'', position:0, status:'Not started' as const };
 function useStateModel() {
   const [state,setState] = useState<State>(initial);
@@ -29,7 +29,12 @@ function useStateModel() {
   const addBook = (book:Book) => setState(s=>({...s,plan:s.plan.includes(book.id)?s.plan:[...s.plan,book.id]}));
   const setQuery = (query:string) => setState(s=> query===s.query?s:{...s,query,topics:[],plan:[],bookId:resultsFor(query).books[0]?.id??s.bookId});
   const setTopics = (topics:string[]) => patch({topics,plan:[]});
-  return { ...state, hydrated, patch, setQuery, setTopics, selectedBook, selectedChapter, selectBook, addBook,
+  const readingKey = (book:Book, chapter:Chapter) => `${book.id}:${chapter.number}`;
+  return { ...state, hydrated, patch, setQuery, setTopics, selectedBook, selectedChapter, selectBook, addBook, readingKey,
+    isReading:(book:Book,chapter:Chapter)=>state.reading.includes(readingKey(book,chapter)),
+    addReading:(book:Book,chapter:Chapter)=>setState(s=>{const k=readingKey(book,chapter);return s.reading.includes(k)?s:{...s,reading:[...s.reading,k]};}),
+    toggleReading:(book:Book,chapter:Chapter)=>setState(s=>{const k=readingKey(book,chapter);return {...s,reading:s.reading.includes(k)?s.reading.filter(x=>x!==k):[...s.reading,k]};}),
+    removeReading:(key:string)=>setState(s=>({...s,reading:s.reading.filter(x=>x!==key)})),
     toggleBook:(book:Book)=>setState(s=>({...s,plan:s.plan.includes(book.id)?s.plan.filter(id=>id!==book.id):[...s.plan,book.id]})),
     setProvider:(provider:State['provider'])=>patch({provider}), setPayment:(payment:State['payment'])=>patch({payment}), setSignedUp:(signedUp:boolean)=>patch({signedUp}),
     setFontSize:(fontSize:number)=>patch({fontSize}),setTheme:(theme:State['theme'])=>patch({theme}),
