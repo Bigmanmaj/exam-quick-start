@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Bookmark, Check, CheckCircle2, ChevronDown, Clock3, Highlighter, ListChecks, Minus, Plus, Quote, Search, Sparkles, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Check, CheckCircle2, Clock3, Highlighter, ListChecks, Minus, Plus, Quote, Search, Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { BookCover } from "@/components/book-cover";
@@ -74,24 +74,23 @@ export function SearchHome() {
   const submit = (event?: FormEvent) => { event?.preventDefault(); if (!value.trim()) return; start(value.trim()); };
   return <main className="min-h-screen overflow-x-hidden bg-paper">
     <LandingHeader />
-    <section id="hero" className="mx-auto flex min-h-[78vh] max-w-5xl scroll-mt-20 flex-col items-center px-8 pt-[8vh] text-center">
-      <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary-soft px-3 py-1.5 text-sm font-semibold text-primary"><Sparkles size={15} /> Perlego Exam Sprint · Demo</div>
+    <section id="hero" className="mx-auto flex max-w-5xl scroll-mt-20 flex-col items-center px-8 pt-10 pb-12 text-center">
+      <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-primary-soft px-3 py-1.5 text-sm font-semibold text-primary"><Sparkles size={15} /> Perlego Exam Sprint · Demo</div>
       <h1 className="max-w-4xl font-display text-7xl leading-[1.03]">Exam coming up? Find the right chapters in minutes.</h1>
-      <p className="mt-5 max-w-2xl text-lg leading-8 text-muted-foreground">Tell us your module. See the material that matches your topics before you sign up.</p>
-      <form onSubmit={submit} className="mt-9 flex w-full max-w-3xl items-center gap-2 rounded-lg border border-input bg-background p-2 shadow-warm focus-within:ring-4 focus-within:ring-ring">
+      <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">Tell us your module. See the material that matches your topics before you sign up.</p>
+      <form onSubmit={submit} className="mt-8 flex w-full max-w-3xl items-center gap-2 rounded-lg border border-input bg-background p-2 shadow-warm focus-within:ring-4 focus-within:ring-ring">
         <Search className="ml-3 shrink-0 text-muted-foreground" size={22} />
         <label className="sr-only" htmlFor="study-search">What do you need to revise?</label>
         <input id="study-search" value={value} onChange={(e) => setValue(e.target.value)} className="min-w-0 flex-1 bg-transparent px-2 py-3 text-lg outline-none" placeholder="Enter your module or textbook title" />
         <Button type="submit" size="lg">Show my study material <ArrowRight size={18} /></Button>
       </form>
-      <div className="mt-7 flex max-w-4xl flex-wrap justify-center gap-2.5">{examples.map((example) => <button key={example} onClick={() => { setValue(example); start(example); }} className="rounded-full border border-border bg-background px-4 py-2.5 text-left text-sm text-secondary-foreground transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring">{example}</button>)}</div>
-      <p className="mt-7 flex items-center gap-2 text-sm text-muted-foreground"><Check size={16} className="text-success" /> No sign-up needed to see what's relevant.</p>
-      <a href="#student-stories" className="scroll-cue mt-auto mb-5 inline-flex flex-col items-center gap-1 text-sm font-semibold text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring"><span>See what students say</span><ChevronDown size={20} aria-hidden="true" /></a>
+      <div className="mt-6 flex max-w-4xl flex-wrap justify-center gap-2.5">{examples.map((example) => <button key={example} onClick={() => { setValue(example); start(example); }} className="rounded-full border border-border bg-background px-4 py-2.5 text-left text-sm text-secondary-foreground transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring">{example}</button>)}</div>
+      <p className="mt-5 flex items-center gap-2 text-sm text-muted-foreground"><Check size={16} className="text-success" /> No sign-up needed to see what's relevant.</p>
     </section>
     {/* DEMO ONLY - REPLACE WITH REAL STUDENT QUOTES BEFORE LAUNCH */}
-    <section id="student-stories" className="scroll-mt-20 border-y border-border bg-background py-20">
+    <section id="student-stories" className="scroll-mt-20 border-y border-border bg-background pt-16 pb-20">
       <div className="mx-auto max-w-7xl px-8">
-        <Reveal><p className="text-sm font-bold text-primary">Student stories</p><h2 className="mt-3 max-w-3xl font-display text-5xl">Loved by students like you</h2><p className="mt-4 text-lg text-muted-foreground">Real revision situations, from students with exams round the corner.</p></Reveal>
+        <Reveal><h2 className="max-w-3xl font-display text-5xl">Loved by students like you</h2><p className="mt-4 text-lg text-muted-foreground">Real revision situations, from students with exams round the corner.</p></Reveal>
         <div className="mt-10 grid grid-cols-3 gap-5">{testimonials.map((story, index) => <Reveal key={story.name} delay={index * 80} className="h-full"><article className="flex h-full min-h-80 flex-col rounded-lg border border-border bg-card p-6 shadow-warm"><Quote size={24} className="text-primary" aria-hidden="true"/><p className="mt-5 flex-1 leading-7 text-card-foreground">“{story.quote}”</p><div className="mt-7 flex items-end justify-between gap-4 border-t border-border pt-5"><div className="flex items-center gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary-soft font-ui text-sm font-extrabold text-primary">{story.name.split(" ").map(part => part[0]).join("")}</span><span><strong className="block font-ui text-sm">{story.name}</strong><span className="text-xs text-muted-foreground">{story.detail}</span></span></div><span className="max-w-28 text-right text-xs font-bold text-primary">{story.tag}</span></div></article></Reveal>)}</div>
         <p className="mt-5 text-xs text-muted-foreground">Placeholder testimonials for demo purposes.</p>
         <div className="mt-10 text-center"><Button asChild variant="outline"><a href="#hero">Start with your module. No account needed <ArrowRight size={17}/></a></Button></div>
