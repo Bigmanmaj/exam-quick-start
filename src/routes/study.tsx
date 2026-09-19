@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StudyPage } from "@/components/perlego";
+import { DashboardPage } from "@/components/dashboard";
 
 export const Route = createFileRoute("/study")({
   head: () => ({ meta: [
-    { title: "Your study plan — Perlego" },
-    { name: "description", content: "Continue your selected chapter and follow your focused revision plan." },
-    { property: "og:title", content: "Your study plan — Perlego" },
-    { property: "og:description", content: "Continue your selected chapter and follow your focused revision plan." },
+    { title: "Your dashboard — Perlego" },
+    { name: "description", content: "Your personalised Perlego dashboard: recommended books, your bookshelf and account details." },
+    { property: "og:title", content: "Your dashboard — Perlego" },
+    { property: "og:description", content: "Your personalised Perlego dashboard: recommended books, your bookshelf and account details." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ]}),
-  component: StudyPage,
+  component: DashboardPage,
 });

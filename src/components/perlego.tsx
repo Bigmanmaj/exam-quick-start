@@ -14,7 +14,7 @@ export function Header({ back }: { back?: "/" | "/results" | "/study" | "/topics
   const state = useOnboarding(); const navigate = useNavigate();
   return <header className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-5 sm:px-8">
     <div className="flex items-center gap-5">{back ? <Link to={back} aria-label="Go back" className="grid size-10 place-items-center rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring"><ArrowLeft size={20} /></Link> : null}<Logo /></div>
-    <Button variant="ghost" onClick={() => navigate({to: state.signedUp ? "/study" : "/signup"})}>{state.signedUp ? "Your revision plan" : "Log in (demo)"}</Button>
+    <Button variant="ghost" onClick={() => navigate({to: state.signedUp ? "/study" : "/login"})}>{state.signedUp ? "Your dashboard" : "Log in (demo)"}</Button>
   </header>;
 }
 
@@ -60,7 +60,7 @@ function LandingHeader() {
     return () => window.removeEventListener("scroll", update);
   }, []);
   return <header className={cn("sticky top-0 z-40 bg-paper/90 transition-shadow", scrolled && "shadow-warm backdrop-blur-md")}>
-    <div className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-5 sm:px-8"><Logo /><Button variant="ghost" onClick={() => navigate({to: state.signedUp ? "/study" : "/signup"})}>{state.signedUp ? "Your revision plan" : "Log in (demo)"}</Button></div>
+    <div className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-5 sm:px-8"><Logo /><Button variant="ghost" onClick={() => navigate({to: state.signedUp ? "/study" : "/login"})}>{state.signedUp ? "Your dashboard" : "Log in (demo)"}</Button></div>
     <div className="h-0.5 bg-border" aria-hidden="true"><div className="h-full bg-primary transition-[width] duration-150" style={{ width: `${progress}%` }} /></div>
   </header>;
 }
