@@ -1,14 +1,16 @@
 # Perlego Exam Sprint — a customer onboarding flow prototype
 
-**This is a frontend demo only. It has no actual functionality** — there is no real backend, no accounts, no payments, no AI and no real book content. Everything you see is simulated in the browser.
+> Unofficial hackathon project — not affiliated with or endorsed by Perlego. Built as a prototype for a Perlego-sponsored hackathon.
 
-**The intention is to show a customer onboarding flow**: how an exam-focused student could go from searching a topic to reading the right chapter in minutes, with the product proving its value before asking them to sign up.
+**This is a frontend demo only.** There is no real backend, no accounts, no payments, no AI and no real book content — everything you see is simulated in the browser.
+
+**The goal is to show a customer onboarding flow**: how an exam-focused student could go from searching a topic to reading the right chapter in minutes, with the product proving its value before asking them to sign up.
 
 ## The idea
 
 A student with an exam coming up doesn't browse a library. They need to know one thing: *is this the right material, and how fast can I start?*
 
-Most onboarding flows ask a student to create an account first and prove their value later. This prototype flips that around — the student searches their module or topic, sees genuinely matched chapters with reading times and coverage, and previews a chapter before any sign-up is requested.
+Most onboarding flows ask a student to create an account first and prove their value later. This prototype flips that around: the student searches their module or topic, sees genuinely matched chapters with reading times and coverage, and previews a chapter before any sign-up is requested.
 
 ## How the journey works
 
@@ -21,22 +23,24 @@ Most onboarding flows ask a student to create an account first and prove their v
 
 ## What works in the demo
 
+Beyond the core flow, a few things make it feel like a real product rather than a click-through:
+
 - Selections, saved chapters and progress persist across pages and reloads.
-- A guest sample revision plan: adding a book without an account still builds a dashboard, with a prompt to sign up to save it.
+- A guest can add a book without an account and still get a working dashboard, with a prompt to sign up to save it — a sample revision plan for anyone browsing before committing.
 - Chapters can be added to or removed from the reading list.
 - Search topics can be edited after the initial search.
 - Missing cover images fall back to a clean titled cover.
 - The interface is keyboard-accessible, with visible focus states.
 
-Everything shown is demo data, and sample chapter text is labelled as such.
+All content shown is demo data, and sample chapter text is labelled as such.
 
 ## What is intentionally not real
 
-- No authentication — sign-up and log-in are simulated
-- No payments — card, Google Pay and Apple Pay are mock interfaces
-- No AI — search matching is simple local logic
-- No real book text — preview paragraphs are written sample content
-- No database — all state lives in the browser
+- **No authentication** — sign-up and log-in are simulated
+- **No payments** — card, Google Pay and Apple Pay are mock interfaces
+- **No AI** — search matching is simple local logic
+- **No real book text** — preview paragraphs are written sample content
+- **No database** — all state lives in the browser
 
 ## Built with
 
@@ -46,11 +50,9 @@ Everything shown is demo data, and sample chapter text is labelled as such.
 - TanStack Start and TanStack Router
 - shadcn/ui
 
-All data is local demo data; no backend is required.
-
 ## Run it locally
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+You'll need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
 git clone <this-repository-url>
